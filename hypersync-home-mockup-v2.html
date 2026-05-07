@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyperSync — Low-code integration platform for TOTVS Protheus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;450;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f9fc;
+    --bg-card: #ffffff;
+    --ink: #0b1220;
+    --ink-2: #364153;
+    --ink-3: #64748b;
+    --ink-4: #94a3b8;
+    --line: #e4e9f0;
+    --line-soft: #eef2f7;
+    --blue: #2563eb;
+    --blue-strong: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --blue-tint: #dbeafe;
+    --code-bg: #0b1220;
+    --code-bg-2: #0f1729;
+    --code-ink: #e2e8f0;
+    --code-mute: #64748b;
+    --code-key: #60a5fa;
+    --code-str: #86efac;
+    --code-num: #fcd34d;
+    --code-com: #475569;
+    --green: #10b981;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'ss03', 'cv11';
+    overflow-x: hidden;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  ::selection { background: var(--blue); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  code, .mono { font-family: 'Geist Mono', monospace; font-feature-settings: 'ss02', 'ss03'; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-left { display: flex; align-items: center; gap: 40px; }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .logo-mark::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .logo-by {
+    color: var(--ink-4);
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    color: var(--ink-2);
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .btn-ghost { color: var(--ink-2); }
+  .btn-ghost:hover { background: var(--bg-soft); color: var(--ink); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    padding: 8px 16px;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-primary:hover { background: var(--blue-strong); }
+  .btn-outline {
+    border-color: var(--line);
+    color: var(--ink);
+    padding: 8px 16px;
+    background: var(--bg);
+  }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-lg { padding: 11px 22px; font-size: 14.5px; }
+
+  /* HERO */
+  .hero {
+    padding: 88px 0 72px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(37,99,235,0.06) 0%, transparent 70%),
+      linear-gradient(180deg, var(--blue-soft) 0%, transparent 30%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 60% 80% at 50% 0%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 2; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px 5px 6px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    margin-bottom: 32px;
+    background: var(--bg);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .badge-pill {
+    background: var(--blue);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 5.6vw, 68px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin-bottom: 22px;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--ink-3);
+    max-width: 580px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 56px;
+  }
+  .hero-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+    padding: 6px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+  }
+  .hero-meta .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  }
+
+  /* CODE PREVIEW (HERO) */
+  .code-preview {
+    max-width: 920px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    box-shadow:
+      0 1px 2px rgba(11,18,32,0.06),
+      0 8px 24px -4px rgba(11,18,32,0.12),
+      0 24px 48px -12px rgba(11,18,32,0.18);
+  }
+  .code-tabs {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    padding: 0 16px;
+  }
+  .code-dots { display: flex; gap: 6px; padding: 12px 0; }
+  .code-dots span { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+  .code-tab-list {
+    display: flex;
+    margin-left: 16px;
+    list-style: none;
+  }
+  .code-tab {
+    padding: 12px 16px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--code-mute);
+    border-bottom: 1px solid transparent;
+    cursor: default;
+  }
+  .code-tab.active {
+    color: var(--code-ink);
+    border-bottom-color: var(--code-key);
+  }
+  .code-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 380px;
+  }
+  .code-side {
+    padding: 24px 28px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--code-ink);
+  }
+  .code-side.left { border-right: 1px solid rgba(255,255,255,0.06); }
+  .code-side .lbl {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--code-mute);
+    margin-bottom: 16px;
+  }
+  .ln { color: rgba(255,255,255,0.2); display: inline-block; width: 20px; user-select: none; }
+  .k { color: var(--code-key); }
+  .s { color: var(--code-str); }
+  .n { color: var(--code-num); }
+  .c { color: var(--code-com); }
+  .p { color: var(--code-mute); }
+  .resp-row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .resp-status {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: rgba(16,185,129,0.15);
+    color: #4ade80;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .resp-time { font-size: 11px; color: var(--code-mute); margin-left: auto; }
+
+  /* TRUSTED BY */
+  .trusted {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .trusted-label {
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-4);
+    margin-bottom: 28px;
+    letter-spacing: -0.005em;
+  }
+  .trusted-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 56px;
+    flex-wrap: wrap;
+  }
+  .trusted-row span {
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: var(--ink-3);
+    opacity: 0.75;
+  }
+
+  /* VIDEO SECTION */
+  .video-section {
+    padding: 96px 0;
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+    position: relative;
+  }
+  .video-head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .video-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--blue);
+    margin-bottom: 16px;
+    padding: 4px 10px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    border-radius: 100px;
+  }
+  .video-eyebrow::before {
+    content: '▶';
+    font-size: 8px;
+  }
+  .video-head h2 {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 720px;
+    margin: 0 auto 16px;
+  }
+  .video-head p {
+    font-size: 17px;
+    color: var(--ink-3);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .video-frame {
+    max-width: 1040px;
+    margin: 0 auto;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    box-shadow:
+      0 1px 2px rgba(11,18,32,0.06),
+      0 12px 32px -8px rgba(11,18,32,0.15),
+      0 32px 64px -16px rgba(37,99,235,0.18);
+    position: relative;
+  }
+  .video-chrome {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .video-chrome-dots { display: flex; gap: 6px; }
+  .video-chrome-dots span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .video-chrome-url {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .video-chrome-url::before {
+    content: '🔒';
+    font-size: 9px;
+    filter: grayscale(1) opacity(0.5);
+  }
+  .video-player {
+    aspect-ratio: 16/9;
+    position: relative;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(37,99,235,0.18) 0%, transparent 55%),
+      radial-gradient(circle at 75% 65%, rgba(96,165,250,0.12) 0%, transparent 55%),
+      linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .video-player:hover .play-btn {
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow:
+      0 0 0 10px rgba(37,99,235,0.12),
+      0 12px 40px rgba(37,99,235,0.4);
+  }
+  .video-poster-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(96,165,250,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(96,165,250,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 70% at center, black 25%, transparent 75%);
+  }
+  .video-poster-mock {
+    position: absolute;
+    inset: 14% 18% 20% 18%;
+    background: rgba(15,23,41,0.6);
+    border: 1px solid rgba(96,165,250,0.15);
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .video-poster-mock-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: rgba(226,232,240,0.5);
+  }
+  .video-poster-mock-header::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+  }
+  .vp-tag {
+    margin-left: auto;
+    padding: 2px 6px;
+    background: rgba(16,185,129,0.15);
+    color: #4ade80;
+    border-radius: 3px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .video-poster-mock-body {
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    height: calc(100% - 36px);
+  }
+  .vp-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vp-side-item {
+    height: 7px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+  }
+  .vp-side-item.active {
+    background: linear-gradient(90deg, var(--blue) 0%, #60a5fa 100%);
+    width: 75%;
+  }
+  .vp-main {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .vp-line {
+    height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+  }
+  .vp-line.short { width: 40%; }
+  .vp-line.med { width: 70%; }
+  .vp-line.long { width: 88%; }
+  .vp-line.accent { background: rgba(96,165,250,0.3); width: 30%; }
+  .vp-line.success { background: rgba(16,185,129,0.3); width: 22%; }
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0 0 8px rgba(37,99,235,0.08),
+      0 8px 32px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    z-index: 5;
+  }
+  .play-btn::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 18px solid var(--blue);
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    margin-left: 4px;
+  }
+  .video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 4;
+  }
+  .video-progress {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .video-progress-fill {
+    width: 22%;
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+  .video-time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.85);
+    min-width: 70px;
+  }
+  .video-meta-row {
+    max-width: 1040px;
+    margin: 24px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    font-size: 13px;
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+  }
+  .video-meta-row .left { display: flex; align-items: center; gap: 16px; }
+  .video-meta-row a { color: var(--blue); }
+  .video-meta-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .video-chapters {
+    display: flex;
+    gap: 6px;
+  }
+  .video-chapter {
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    background: var(--bg);
+    cursor: default;
+    transition: all 0.15s;
+  }
+  .video-chapter:hover { border-color: var(--blue); color: var(--blue); }
+  .video-chapter.active {
+    background: var(--blue-soft);
+    border-color: var(--blue-tint);
+    color: var(--blue-strong);
+  }
+
+  /* SECTION */
+  section.std { padding: 96px 0; border-bottom: 1px solid var(--line); }
+  .sec-eyebrow {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--blue);
+    margin-bottom: 16px;
+    padding: 4px 10px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    border-radius: 100px;
+  }
+  .sec-title {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+  .sec-sub {
+    font-size: 17px;
+    color: var(--ink-3);
+    max-width: 600px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+
+  /* FEATURES GRID */
+  .feat-grid {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .feat {
+    padding: 28px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    transition: background 0.15s;
+  }
+  .feat:hover { background: var(--bg-soft); }
+  .feat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue);
+  }
+  .feat h3 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin-bottom: 8px;
+  }
+  .feat p {
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+
+  /* TWO COL FEATURE */
+  .twocol {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+    align-items: center;
+    margin-top: 64px;
+  }
+  .twocol-text h3 {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .twocol-text p {
+    font-size: 16px;
+    color: var(--ink-3);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .twocol-list {
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .twocol-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14.5px;
+  }
+  .check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* DIAGRAM */
+  .diagram {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+  }
+  .diagram-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: center;
+  }
+  .diagram-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .diagram-box {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .diagram-box-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .diagram-box.queue {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-strong) 100%);
+    color: #fff;
+    border-color: var(--blue);
+    justify-content: center;
+    padding: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+  }
+  .diagram-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue);
+    font-family: 'Geist Mono', monospace;
+    font-size: 18px;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .price-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+  }
+  .price-card.featured {
+    border-color: var(--blue);
+    background: linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+    color: #fff;
+    position: relative;
+    box-shadow: 0 12px 32px -8px rgba(37,99,235,0.3);
+  }
+  .price-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 12px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--blue) 0%, transparent 50%, var(--blue) 100%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .price-card.featured .price-amount-currency,
+  .price-card.featured .price-feat span,
+  .price-card.featured .price-desc { color: rgba(255,255,255,0.65); }
+  .price-card.featured .price-feat::before { color: #60a5fa; }
+
+  .price-tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .price-card.featured .price-tag { color: #60a5fa; }
+  .price-name {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .price-desc {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    min-height: 40px;
+  }
+  .price-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .price-amount-num {
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .price-amount-currency { font-size: 14px; color: var(--ink-3); }
+  .price-amount-period {
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-left: 4px;
+  }
+  .price-card.featured .price-amount-period { color: rgba(255,255,255,0.55); }
+  .price-cta {
+    margin: 24px 0;
+    width: 100%;
+    justify-content: center;
+  }
+  .price-card.featured .btn-outline {
+    border-color: rgba(255,255,255,0.18);
+    color: #fff;
+    background: rgba(255,255,255,0.04);
+  }
+  .price-card.featured .btn-outline:hover {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+  .price-feats {
+    list-style: none;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .price-card.featured .price-feats { border-color: rgba(255,255,255,0.1); }
+  .price-feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .price-feat::before {
+    content: '✓';
+    color: var(--blue);
+    flex-shrink: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* CASE / SOCIAL PROOF */
+  .case-block {
+    margin-top: 56px;
+    padding: 40px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background:
+      linear-gradient(135deg, var(--blue-soft) 0%, var(--bg) 60%);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .case-quote {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .case-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .case-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .case-author-name { font-weight: 500; }
+  .case-author-role { color: var(--ink-3); font-size: 12.5px; }
+  .case-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .case-stat {
+    background: var(--bg);
+    padding: 20px;
+  }
+  .case-stat-num {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 6px;
+    color: var(--blue);
+  }
+  .case-stat-label {
+    font-size: 12px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+
+  /* CTA */
+  .cta {
+    padding: 120px 0;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, var(--blue-soft) 0%, transparent 70%),
+      var(--bg);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .cta h2 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .cta p {
+    font-size: 17px;
+    color: var(--ink-3);
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  /* FOOTER */
+  footer { padding: 64px 0 32px; }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+  .foot-brand p {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    margin-top: 16px;
+    max-width: 280px;
+    line-height: 1.55;
+  }
+  .foot-by {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-4);
+  }
+  .foot-by a {
+    color: var(--blue);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .foot-col h5 {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col a {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    transition: color 0.15s;
+  }
+  .foot-col a:hover { color: var(--blue); }
+  .foot-bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--ink-4);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .feat-grid { grid-template-columns: repeat(2, 1fr); }
+    .twocol { grid-template-columns: 1fr; gap: 32px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .case-block { grid-template-columns: 1fr; gap: 32px; padding: 28px; }
+    .code-body { grid-template-columns: 1fr; }
+    .code-side.left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .video-poster-mock { inset: 12% 8% 24% 8%; }
+  }
+  @media (max-width: 560px) {
+    .hero { padding: 56px 0 48px; }
+    section.std, .video-section { padding: 64px 0; }
+    .hero h1 { font-size: 36px; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .diagram-grid { grid-template-columns: 1fr; gap: 12px; }
+    .diagram-arrow { transform: rotate(90deg); padding: 4px 0; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .foot-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    .video-meta-row { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .play-btn { width: 60px; height: 60px; }
+    .play-btn::after { border-left-width: 14px; border-top-width: 9px; border-bottom-width: 9px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-row">
+    <div class="nav-left">
+      <a href="/" class="logo">
+        <span class="logo-mark"></span>
+        HyperSync
+        <span class="logo-by">by HSB</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Product</a></li>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Customers</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="btn btn-ghost">Sign in</a>
+      <a href="#" class="btn btn-primary">Start for free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="badge">
+      <span class="badge-pill">v2.4</span>
+      Now with two-step async pipelines
+    </div>
+    <h1>Integrations for Protheus,<br>built like an <span class="accent">API.</span></h1>
+    <p>HyperSync is a low-code platform to build, secure and scale integrations on top of TOTVS Protheus — without ADVPL boilerplate.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-primary btn-lg">Start for free</a>
+      <a href="#" class="btn btn-outline btn-lg">Read the docs →</a>
+    </div>
+    <div class="hero-meta">
+      <span class="dot"></span>
+      <span>Running in production at Disney · 100k+ invoices/month</span>
+    </div>
+  </div>
+</section>
+
+<!-- CODE PREVIEW -->
+<section style="padding: 56px 0; border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <div class="code-preview">
+      <div class="code-tabs">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <ul class="code-tab-list">
+          <li class="code-tab active">request.json</li>
+          <li class="code-tab">response.json</li>
+          <li class="code-tab">advpl.prw</li>
+        </ul>
+      </div>
+      <div class="code-body">
+        <div class="code-side left">
+          <span class="lbl">— Define query</span>
+          <div><span class="ln">1</span><span class="k">POST</span> <span class="s">/api/v2/query</span></div>
+          <div><span class="ln">2</span><span class="p">{</span></div>
+          <div><span class="ln">3</span>&nbsp;&nbsp;<span class="k">"table"</span><span class="p">:</span> <span class="s">"SA1"</span><span class="p">,</span></div>
+          <div><span class="ln">4</span>&nbsp;&nbsp;<span class="k">"fields"</span><span class="p">:</span> <span class="p">[</span><span class="s">"A1_COD"</span><span class="p">,</span> <span class="s">"A1_NOME"</span><span class="p">,</span> <span class="s">"A1_LIMCRED"</span><span class="p">],</span></div>
+          <div><span class="ln">5</span>&nbsp;&nbsp;<span class="k">"where"</span><span class="p">:</span> <span class="p">{</span></div>
+          <div><span class="ln">6</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"A1_EST"</span><span class="p">:</span> <span class="s">"SP"</span><span class="p">,</span></div>
+          <div><span class="ln">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"A1_LIMCRED"</span><span class="p">:</span> <span class="p">{</span> <span class="k">"$gte"</span><span class="p">:</span> <span class="n">50000</span> <span class="p">}</span></div>
+          <div><span class="ln">8</span>&nbsp;&nbsp;<span class="p">},</span></div>
+          <div><span class="ln">9</span>&nbsp;&nbsp;<span class="k">"limit"</span><span class="p">:</span> <span class="n">100</span></div>
+          <div><span class="ln">10</span><span class="p">}</span></div>
+          <br>
+          <div class="c"><span class="ln">11</span>// auth, queue, audit handled automatically</div>
+        </div>
+        <div class="code-side">
+          <div class="resp-row">
+            <span class="lbl" style="margin-bottom: 0;">— Response</span>
+            <span class="resp-status">200 OK</span>
+            <span class="resp-time">42ms</span>
+          </div>
+          <div style="margin-top: 16px;"><span class="ln">1</span><span class="p">{</span></div>
+          <div><span class="ln">2</span>&nbsp;&nbsp;<span class="k">"data"</span><span class="p">:</span> <span class="p">[</span></div>
+          <div><span class="ln">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">{</span></div>
+          <div><span class="ln">4</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"A1_COD"</span><span class="p">:</span> <span class="s">"000142"</span><span class="p">,</span></div>
+          <div><span class="ln">5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"A1_NOME"</span><span class="p">:</span> <span class="s">"ACME LTDA"</span><span class="p">,</span></div>
+          <div><span class="ln">6</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"A1_LIMCRED"</span><span class="p">:</span> <span class="n">120000.00</span></div>
+          <div><span class="ln">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">},</span></div>
+          <div><span class="ln">8</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">// + 47 more</span></div>
+          <div><span class="ln">9</span>&nbsp;&nbsp;<span class="p">],</span></div>
+          <div><span class="ln">10</span>&nbsp;&nbsp;<span class="k">"meta"</span><span class="p">:</span> <span class="p">{</span> <span class="k">"count"</span><span class="p">:</span> <span class="n">48</span><span class="p">,</span> <span class="k">"cached"</span><span class="p">:</span> <span class="n">false</span> <span class="p">}</span></div>
+          <div><span class="ln">11</span><span class="p">}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<section class="trusted">
+  <div class="container">
+    <div class="trusted-label">Trusted by teams running Protheus at scale</div>
+    <div class="trusted-row">
+      <span>Disney</span>
+      <span>Global Pharma</span>
+      <span>Industrial Group</span>
+      <span>FMCG Co.</span>
+      <span>Energy Corp</span>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO DEMO -->
+<section class="video-section">
+  <div class="container">
+    <div class="video-head">
+      <div class="video-eyebrow">Watch the demo · 1:24</div>
+      <h2>From zero to first integration in 90 seconds.</h2>
+      <p>See an engineer build, deploy and call a real Protheus API live — no slides, no narration, just the product.</p>
+    </div>
+
+    <div class="video-frame">
+      <div class="video-chrome">
+        <div class="video-chrome-dots"><span></span><span></span><span></span></div>
+        <div class="video-chrome-url">app.hypersync.com.br/integrations/new</div>
+        <div style="width: 32px;"></div>
+      </div>
+      <div class="video-player">
+        <div class="video-poster-grid"></div>
+        <div class="video-poster-mock">
+          <div class="video-poster-mock-header">
+            HyperSync · query builder
+            <span class="vp-tag">● live</span>
+          </div>
+          <div class="video-poster-mock-body">
+            <div class="vp-sidebar">
+              <div class="vp-side-item"></div>
+              <div class="vp-side-item active"></div>
+              <div class="vp-side-item"></div>
+              <div class="vp-side-item"></div>
+              <div class="vp-side-item"></div>
+            </div>
+            <div class="vp-main">
+              <div class="vp-line med"></div>
+              <div class="vp-line short accent"></div>
+              <div class="vp-line long"></div>
+              <div class="vp-line med"></div>
+              <div class="vp-line short"></div>
+              <div class="vp-line long"></div>
+              <div class="vp-line med"></div>
+              <div class="vp-line success"></div>
+            </div>
+          </div>
+        </div>
+        <button class="play-btn" aria-label="Play demo"></button>
+        <div class="video-controls">
+          <span class="video-time">0:18 / 1:24</span>
+          <div class="video-progress">
+            <div class="video-progress-fill"></div>
+          </div>
+          <span class="video-time" style="text-align: right; min-width: 24px;">⊞</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-meta-row">
+      <div class="left">
+        <div class="video-chapters">
+          <span class="video-chapter active">00:00 · Setup</span>
+          <span class="video-chapter">00:24 · Define query</span>
+          <span class="video-chapter">00:51 · Deploy</span>
+          <span class="video-chapter">01:08 · Call API</span>
+        </div>
+      </div>
+      <a href="#">Read the technical walkthrough →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES GRID -->
+<section class="std">
+  <div class="container">
+    <span class="sec-eyebrow">Platform</span>
+    <h2 class="sec-title">Everything you need to ship integrations in production.</h2>
+    <p class="sec-sub">Stop writing the same auth, queue and audit code over and over. HyperSync gives you the primitives — you focus on business logic.</p>
+
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-icon">{ }</div>
+        <h3>API builder</h3>
+        <p>Define endpoints with JSON schemas. No ADVPL boilerplate, no protocolo.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⌖</div>
+        <h3>Dynamic queries</h3>
+        <p>GraphQL-like reads against any Protheus table with deep filters and joins.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⚿</div>
+        <h3>Auth & audit</h3>
+        <p>Token rotation, granular permissions and per-request logs out of the box.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">≋</div>
+        <h3>Async queues</h3>
+        <p>Heavy operations run on workers. Your Protheus server never gets hammered.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⇌</div>
+        <h3>Two-step pipelines</h3>
+        <p>For workflows that need external validation between phases. Idempotent by design.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⊕</div>
+        <h3>Webhooks</h3>
+        <p>Push Protheus events to any system. Retries, dead-letter queues, signed payloads.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TWO COL -->
+<section class="std">
+  <div class="container">
+    <span class="sec-eyebrow">How it works</span>
+    <h2 class="sec-title">Sit between your stack and Protheus.</h2>
+    <p class="sec-sub">HyperSync runs alongside Protheus and exposes a clean HTTP layer. Your apps, partners and AI agents talk to HyperSync — never directly to ADVPL.</p>
+
+    <div class="twocol">
+      <div class="twocol-text">
+        <h3>Built for Protheus, not bolted on.</h3>
+        <p>Native ADVPL bridge, respects your environment configurations and works across Protheus 12.x — including legacy customizations.</p>
+        <ul class="twocol-list">
+          <li><span class="check">✓</span><span>Native ADVPL bridge with zero overhead</span></li>
+          <li><span class="check">✓</span><span>Respects environments, branches, companies</span></li>
+          <li><span class="check">✓</span><span>Compatible with Protheus 12.1.x +</span></li>
+          <li><span class="check">✓</span><span>On-premise or hybrid deployment</span></li>
+        </ul>
+      </div>
+      <div class="diagram">
+        <div class="diagram-grid">
+          <div class="diagram-col">
+            <div class="diagram-box"><span class="diagram-box-dot"></span>External app</div>
+            <div class="diagram-box"><span class="diagram-box-dot"></span>SAP / Oracle</div>
+            <div class="diagram-box"><span class="diagram-box-dot"></span>Webhook</div>
+            <div class="diagram-box"><span class="diagram-box-dot"></span>AI agent</div>
+          </div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-col">
+            <div class="diagram-box queue">HyperSync</div>
+            <div class="diagram-box" style="margin-top: 8px;"><span class="diagram-box-dot"></span>Protheus 12.1</div>
+            <div class="diagram-box"><span class="diagram-box-dot"></span>SX1 / SX2 / SX3</div>
+            <div class="diagram-box"><span class="diagram-box-dot"></span>Custom fns</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE -->
+<section class="std">
+  <div class="container">
+    <span class="sec-eyebrow">Customer story</span>
+    <h2 class="sec-title">100k+ invoices/month at Disney, on autopilot.</h2>
+
+    <div class="case-block">
+      <div>
+        <p class="case-quote">"We needed a robust pipeline to ingest invoices from suppliers into Protheus, with validation and queueing. HyperSync gave us that in weeks — not months."</p>
+        <div class="case-author">
+          <div class="case-avatar">D</div>
+          <div>
+            <div class="case-author-name">Engineering team</div>
+            <div class="case-author-role">The Walt Disney Company</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-stats-grid">
+        <div class="case-stat">
+          <div class="case-stat-num">100k+</div>
+          <div class="case-stat-label">Invoices processed monthly</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">94%</div>
+          <div class="case-stat-label">Manual rework eliminated</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">3.2s</div>
+          <div class="case-stat-label">Avg validation time</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">99.97%</div>
+          <div class="case-stat-label">Pipeline uptime</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="std" id="pricing">
+  <div class="container">
+    <span class="sec-eyebrow">Pricing</span>
+    <h2 class="sec-title">Start free. Scale when ready.</h2>
+    <p class="sec-sub">Free tier with everything you need to build. Pay only when you need volume, SSO or dedicated support.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <span class="price-tag">free</span>
+        <div class="price-name">Hobby</div>
+        <p class="price-desc">For individual developers prototyping integrations.</p>
+        <div class="price-amount">
+          <span class="price-amount-num">R$ 0</span>
+          <span class="price-amount-period">/forever</span>
+        </div>
+        <a href="#" class="btn btn-outline price-cta">Start free</a>
+        <ul class="price-feats">
+          <li class="price-feat">10k API calls / month</li>
+          <li class="price-feat">3 endpoints</li>
+          <li class="price-feat">Community support</li>
+          <li class="price-feat">Basic audit logs (7d)</li>
+        </ul>
+      </div>
+
+      <div class="price-card featured">
+        <span class="price-tag">most popular</span>
+        <div class="price-name">Pro</div>
+        <p class="price-desc">For teams running Protheus integrations in production.</p>
+        <div class="price-amount">
+          <span class="price-amount-currency">R$</span>
+          <span class="price-amount-num">2.490</span>
+          <span class="price-amount-period">/month</span>
+        </div>
+        <a href="#" class="btn btn-outline price-cta">Start 14-day trial</a>
+        <ul class="price-feats">
+          <li class="price-feat">1M API calls / month</li>
+          <li class="price-feat">Unlimited endpoints</li>
+          <li class="price-feat">Async queues + webhooks</li>
+          <li class="price-feat">Audit logs (90d)</li>
+          <li class="price-feat">Priority email support</li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <span class="price-tag">custom</span>
+        <div class="price-name">Enterprise</div>
+        <p class="price-desc">For multinationals with compliance, SSO and dedicated support.</p>
+        <div class="price-amount">
+          <span class="price-amount-num">Talk to us</span>
+        </div>
+        <a href="#" class="btn btn-outline price-cta">Contact sales</a>
+        <ul class="price-feats">
+          <li class="price-feat">Volume pricing</li>
+          <li class="price-feat">SSO / SAML / SCIM</li>
+          <li class="price-feat">On-premise deployment</li>
+          <li class="price-feat">Dedicated SLA + Slack</li>
+          <li class="price-feat">HSB consulting hours included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Build your first integration<br>in under an hour.</h2>
+    <p>No credit card required. Free tier forever. Production-ready from day one.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-primary btn-lg">Start for free →</a>
+      <a href="#" class="btn btn-outline btn-lg">Talk to engineering</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          HyperSync
+        </div>
+        <p>Low-code integration platform for TOTVS Protheus. Built by engineers who run Protheus in production.</p>
+        <div class="foot-by">A product by <a href="https://hsbconsultoria.com.br">HSB Consultoria</a></div>
+      </div>
+      <div class="foot-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Developers</h5>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API reference</a></li>
+          <li><a href="#">Examples</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">Customers</a></li>
+          <li><a href="#">About HSB ↗</a></li>
+          <li><a href="#">Consulting ↗</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">DPA / LGPD</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 HSB Soluções de Tecnologia</div>
+      <div>Protheus, ADVPL and TOTVS are registered trademarks of TOTVS S.A.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

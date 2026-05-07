@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSB — Arquitetura de Sites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F1ECE2;
+    --ink: #1a1815;
+    --ink-soft: #4a453d;
+    --line: #1a1815;
+    --line-soft: rgba(26,24,21,0.15);
+    --accent: #C8401F;
+    --paper: #F8F4EB;
+    --product: #0a0a0a;
+    --product-ink: #f5f5f4;
+    --product-accent: #84cc16;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 32px; }
+
+  /* HEADER */
+  .top {
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+  }
+  .top-row { display: flex; justify-content: space-between; align-items: center; }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .logo-dot { color: var(--accent); }
+  .top-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+  }
+
+  /* HERO */
+  .hero { padding: 80px 0 60px; border-bottom: 1px solid var(--line); }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 18px;
+    max-width: 640px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  /* DIAGRAM SECTION */
+  .diagram { padding: 80px 0; position: relative; }
+
+  /* TWO WORLDS */
+  .worlds {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 80px;
+  }
+
+  .world {
+    border: 1px solid var(--line);
+    padding: 40px;
+    position: relative;
+    background: var(--paper);
+  }
+  .world.product {
+    background: var(--product);
+    color: var(--product-ink);
+    border-color: var(--product);
+  }
+
+  .world-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 16px;
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    border-radius: 100px;
+  }
+  .world.product .world-tag { color: var(--product-accent); border-color: var(--product-accent); }
+
+  .world-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .world-domain {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+  .world.product .world-domain { color: rgba(245,245,244,0.6); }
+
+  .world-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed currentColor;
+    opacity: 0.85;
+  }
+
+  .world-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    margin-bottom: 32px;
+  }
+  .meta-item {
+    font-size: 12px;
+  }
+  .meta-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: 2px;
+  }
+
+  /* PAGES TREE */
+  .pages-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+  .pages {
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .pages li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .world.product .pages li { border-color: rgba(245,245,244,0.1); }
+  .pages li:last-child { border-bottom: none; }
+  .page-name { display: flex; align-items: center; gap: 10px; }
+  .page-name::before {
+    content: '/';
+    opacity: 0.3;
+  }
+  .page-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--bg);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .world.product .page-tag {
+    background: var(--product-accent);
+    color: var(--product);
+  }
+  .page-tag.bridge {
+    background: var(--accent);
+    color: white;
+  }
+  .pages .nested {
+    padding-left: 18px;
+    font-size: 12px;
+    opacity: 0.7;
+    border-bottom: none;
+  }
+
+  /* BRIDGE COLUMN */
+  .bridge-col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  .bridge-line {
+    position: absolute;
+    top: 50%;
+    left: -1px;
+    right: -1px;
+    height: 1px;
+    background: var(--accent);
+    z-index: 0;
+  }
+  .bridge-line::before, .bridge-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .bridge-line::before { left: 0; }
+  .bridge-line::after { right: 0; }
+  .bridge-arrow {
+    background: var(--bg);
+    z-index: 1;
+    padding: 12px 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    line-height: 1.6;
+  }
+  .arrow-symbol {
+    font-size: 18px;
+    display: block;
+    margin: 4px 0;
+  }
+
+  /* FUNNEL FLOW */
+  .funnel {
+    margin-top: 80px;
+    padding: 60px 40px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    position: relative;
+  }
+  .funnel-label {
+    position: absolute;
+    top: -12px;
+    left: 32px;
+    background: var(--bg);
+    padding: 0 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .funnel-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    max-width: 700px;
+  }
+  .funnel-title em { font-style: italic; color: var(--accent); }
+  .funnel-sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .flow-step {
+    padding: 24px 20px;
+    border-left: 1px solid var(--line-soft);
+    position: relative;
+  }
+  .flow-step:first-child { border-left: none; }
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    right: -8px;
+    width: 16px;
+    height: 16px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+    background: var(--paper);
+    z-index: 2;
+  }
+  .flow-step:last-child::before { display: none; }
+
+  .flow-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+  .flow-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .flow-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* STACK */
+  .stack {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .stack-block {
+    border: 1px solid var(--line);
+    padding: 32px;
+  }
+  .stack-block.dark {
+    background: var(--product);
+    color: var(--product-ink);
+    border-color: var(--product);
+  }
+  .stack-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+  .stack-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+  .stack-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .stack-list li {
+    padding: 10px 12px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    opacity: 0.9;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 120px;
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 700px;
+  }
+  .footer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-top: 24px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .worlds { grid-template-columns: 1fr; }
+    .bridge-col { padding: 20px 0; min-height: 80px; }
+    .bridge-line {
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      right: auto;
+      width: 1px;
+      height: auto;
+    }
+    .bridge-line::before { top: 0; left: 50%; transform: translateX(-50%); }
+    .bridge-line::after { bottom: 0; top: auto; right: auto; left: 50%; transform: translateX(-50%); }
+    .flow { grid-template-columns: 1fr 1fr; }
+    .flow-step::before { display: none; }
+    .stack { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 48px; }
+  }
+  @media (max-width: 560px) {
+    .container { padding: 0 20px; }
+    .world { padding: 24px; }
+    .flow { grid-template-columns: 1fr; }
+    .funnel { padding: 40px 24px; }
+    .funnel-title { font-size: 28px; }
+    .world-meta { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="container top-row">
+    <div class="logo">HSB<span class="logo-dot">.</span></div>
+    <div class="top-meta">Arquitetura · v1 · Maio 2026</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">Proposta de arquitetura</div>
+    <h1>Dois mundos,<br>uma <em>marca.</em></h1>
+    <p class="hero-sub">O institucional vende confiança pra CIO global. Os produtos vendem self-serve pra dev mid-market. Cada um no seu domínio, ligados por um funil que transforma usuário grátis em cliente de consultoria.</p>
+  </div>
+</section>
+
+<section class="diagram">
+  <div class="container">
+
+    <!-- TWO WORLDS -->
+    <div class="worlds">
+
+      <!-- INSTITUTIONAL -->
+      <div class="world">
+        <span class="world-tag">Institucional</span>
+        <h2 class="world-name">HSB Consultoria</h2>
+        <div class="world-domain">hsbconsultoria.com.br</div>
+        <p class="world-desc">Hub de credibilidade pro comprador enterprise. Cases profundos, capabilities técnicas, time. Apresenta os produtos como parte do ecossistema, sem tentar vendê-los aqui.</p>
+
+        <div class="world-meta">
+          <div class="meta-item">
+            <div class="meta-key">Audiência</div>
+            <div>CIO / CFO global</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Ticket</div>
+            <div>R$ 500k+</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Aquisição</div>
+            <div>Indicação · RFP</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Ciclo</div>
+            <div>3–6 meses</div>
+          </div>
+        </div>
+
+        <div class="pages-title">Estrutura</div>
+        <ul class="pages">
+          <li><span class="page-name">home</span></li>
+          <li><span class="page-name">work</span><span class="page-tag">cases</span></li>
+          <li><span class="page-name">capabilities</span></li>
+          <li class="nested"><span class="page-name">advpl &amp; protheus</span></li>
+          <li class="nested"><span class="page-name">integrações enterprise</span></li>
+          <li class="nested"><span class="page-name">obrigações fiscais</span></li>
+          <li><span class="page-name">products</span><span class="page-tag bridge">ponte →</span></li>
+          <li class="nested"><span class="page-name">hypersync</span></li>
+          <li class="nested"><span class="page-name">visão contábil</span></li>
+          <li class="nested"><span class="page-name">tax suite</span></li>
+          <li><span class="page-name">approach</span></li>
+          <li><span class="page-name">team</span></li>
+          <li><span class="page-name">insights</span></li>
+          <li><span class="page-name">contact</span><span class="page-tag">cal.com</span></li>
+        </ul>
+      </div>
+
+      <!-- BRIDGE -->
+      <div class="bridge-col">
+        <div class="bridge-line"></div>
+        <div class="bridge-arrow">
+          conexão<span class="arrow-symbol">⇄</span>cruzada
+        </div>
+      </div>
+
+      <!-- PRODUCT -->
+      <div class="world product">
+        <span class="world-tag">Produtos</span>
+        <h2 class="world-name">HyperSync · Visão · Tax</h2>
+        <div class="world-domain">hypersync.com.br · visao.com.br · ...</div>
+        <p class="world-desc">Sites de produto self-serve com pricing visível, signup, docs e checkout. Marcas independentes que puxam credibilidade da HSB quando convém.</p>
+
+        <div class="world-meta">
+          <div class="meta-item">
+            <div class="meta-key">Audiência</div>
+            <div>Dev · Gerente TI</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Ticket</div>
+            <div>Free → R$ 5k/mês</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Aquisição</div>
+            <div>SEO · Indicação</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-key">Ciclo</div>
+            <div>Self-serve · dias</div>
+          </div>
+        </div>
+
+        <div class="pages-title">Estrutura (por produto)</div>
+        <ul class="pages">
+          <li><span class="page-name">home</span></li>
+          <li><span class="page-name">features</span></li>
+          <li><span class="page-name">pricing</span><span class="page-tag">stripe</span></li>
+          <li><span class="page-name">docs</span><span class="page-tag">mintlify</span></li>
+          <li><span class="page-name">changelog</span></li>
+          <li><span class="page-name">customers</span></li>
+          <li><span class="page-name">signup</span><span class="page-tag">free</span></li>
+          <li><span class="page-name">login</span></li>
+          <li class="nested"><span class="page-name">app/dashboard</span></li>
+          <li class="nested"><span class="page-name">app/integrations</span></li>
+          <li class="nested"><span class="page-name">app/billing</span></li>
+          <li><span class="page-name">enterprise</span><span class="page-tag bridge">← ponte</span></li>
+          <li><span class="page-name">contact</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- FUNNEL FLOW -->
+    <div class="funnel">
+      <span class="funnel-label">Funil cruzado</span>
+      <h2 class="funnel-title">Do <em>free tier</em> ao contrato de R$ 2M.</h2>
+      <p class="funnel-sub">Esse é o diferencial competitivo. Empresa testa o produto, cresce, e quando precisa de migração SAP→Protheus, a HSB já é o parceiro de confiança. Mesmo playbook do HubSpot, GitLab e Vercel.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">01 · DESCOBERTA</div>
+          <div class="flow-title">Lead chega no produto</div>
+          <div class="flow-desc">Dev busca "integração Protheus low-code" no Google, cai em hypersync.com.br, faz signup grátis.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">02 · USO</div>
+          <div class="flow-title">Empresa cresce no produto</div>
+          <div class="flow-desc">Tracking por conta detecta uso intenso. Enriquecimento via Clearbit identifica empresa de 5Bi+. Score sobe.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">03 · SINAL</div>
+          <div class="flow-title">Alerta no CRM central</div>
+          <div class="flow-desc">HubSpot recebe webhook. Sócio é notificado. CTA contextual aparece no app: "fale com nosso time enterprise".</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">04 · CONVERSÃO</div>
+          <div class="flow-title">Migra pra consultoria</div>
+          <div class="flow-desc">Reunião no institucional, proposta enterprise via Clicksign, projeto de R$ 500k–2M fechado.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STACK -->
+    <div class="stack">
+      <div class="stack-block">
+        <div class="stack-head">Institucional</div>
+        <div class="stack-name">Stack premium boutique</div>
+        <ul class="stack-list">
+          <li>Next.js 15</li>
+          <li>Tailwind</li>
+          <li>Sanity CMS</li>
+          <li>Framer Motion</li>
+          <li>shadcn/ui</li>
+          <li>Cal.com</li>
+          <li>Clicksign</li>
+          <li>Vercel</li>
+        </ul>
+      </div>
+      <div class="stack-block dark">
+        <div class="stack-head">Produtos</div>
+        <div class="stack-name">Stack SaaS self-serve</div>
+        <ul class="stack-list">
+          <li>Next.js 15</li>
+          <li>Tailwind</li>
+          <li>Stripe + Asaas</li>
+          <li>Mintlify Docs</li>
+          <li>Better Auth</li>
+          <li>Postgres</li>
+          <li>PostHog</li>
+          <li>Resend</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p class="footer-text">"O institucional não vende produto. O produto não vende consultoria. Mas juntos, eles vendem os dois — porque o cliente entra por onde faz sentido pra ele."</p>
+      <div class="footer-meta">HSB · arquitetura proposta · maio 2026</div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

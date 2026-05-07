@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — HyperSync</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;450;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f9fc;
+    --bg-card: #ffffff;
+    --ink: #0b1220;
+    --ink-2: #364153;
+    --ink-3: #64748b;
+    --ink-4: #94a3b8;
+    --line: #e4e9f0;
+    --line-soft: #eef2f7;
+    --blue: #2563eb;
+    --blue-strong: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --blue-tint: #dbeafe;
+    --code-bg: #0b1220;
+    --code-bg-2: #0f1729;
+    --green: #10b981;
+    --green-soft: #d1fae5;
+    --amber: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'ss03', 'cv11';
+    overflow-x: hidden;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  ::selection { background: var(--blue); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  code, .mono { font-family: 'Geist Mono', monospace; font-feature-settings: 'ss02', 'ss03'; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .nav-left { display: flex; align-items: center; gap: 40px; }
+  .logo {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 15px; letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .logo-mark::before {
+    content: '';
+    width: 8px; height: 8px;
+    border: 1.5px solid #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .logo-by { color: var(--ink-4); font-size: 12px; font-weight: 400; margin-left: 6px; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { font-size: 14px; color: var(--ink-2); transition: color 0.15s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 13.5px; font-weight: 500;
+    transition: all 0.15s; border: 1px solid transparent;
+    cursor: pointer; line-height: 1;
+  }
+  .btn-ghost { color: var(--ink-2); }
+  .btn-ghost:hover { background: var(--bg-soft); color: var(--ink); }
+  .btn-primary {
+    background: var(--blue); color: #fff; padding: 8px 16px;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-primary:hover { background: var(--blue-strong); }
+  .btn-outline {
+    border-color: var(--line); color: var(--ink); padding: 8px 16px; background: var(--bg);
+  }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-lg { padding: 11px 22px; font-size: 14.5px; }
+  .btn-block { width: 100%; justify-content: center; }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 80px 0 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(37,99,235,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .page-header > * { position: relative; z-index: 2; }
+  .eyebrow {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px; color: var(--blue);
+    margin-bottom: 16px;
+    padding: 4px 10px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    border-radius: 100px;
+  }
+  .page-header h1 {
+    font-size: clamp(40px, 5.6vw, 60px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin-bottom: 18px;
+  }
+  .page-header h1 .accent {
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .page-header p {
+    font-size: 18px; color: var(--ink-3);
+    max-width: 580px; margin: 0 auto;
+    line-height: 1.5; letter-spacing: -0.005em;
+  }
+
+  /* BILLING TOGGLE */
+  .billing-toggle {
+    display: inline-flex;
+    margin: 32px auto 0;
+    padding: 4px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    position: relative;
+  }
+  .billing-toggle button {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    border-radius: 100px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 2;
+    font-family: inherit;
+  }
+  .billing-toggle button.active { color: var(--ink); }
+  .billing-toggle .slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    background: var(--bg);
+    border-radius: 100px;
+    box-shadow: 0 1px 3px rgba(11,18,32,0.1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+  .save-badge {
+    background: var(--green-soft);
+    color: var(--green);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 500;
+    margin-left: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  /* PRICING CARDS */
+  .pricing-section { padding: 40px 0 96px; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .price-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 32px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .price-card:hover { border-color: var(--ink-4); }
+  .price-card.featured {
+    border-color: var(--blue);
+    background: linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+    color: #fff;
+    box-shadow: 0 12px 40px -12px rgba(37,99,235,0.4);
+    transform: translateY(-4px);
+  }
+  .price-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 14px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--blue) 0%, transparent 50%, var(--blue) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .price-tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .price-card.featured .price-tag {
+    color: #60a5fa;
+    background: rgba(96,165,250,0.1);
+    padding: 2px 8px;
+    border-radius: 100px;
+    border: 1px solid rgba(96,165,250,0.2);
+  }
+  .price-name {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .price-desc {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    min-height: 40px;
+  }
+  .price-card.featured .price-desc { color: rgba(255,255,255,0.6); }
+  .price-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .price-amount-num {
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .price-amount-currency { font-size: 16px; color: var(--ink-3); }
+  .price-card.featured .price-amount-currency { color: rgba(255,255,255,0.6); }
+  .price-amount-period {
+    font-size: 14px;
+    color: var(--ink-3);
+    margin-left: 4px;
+  }
+  .price-card.featured .price-amount-period { color: rgba(255,255,255,0.55); }
+  .price-billed {
+    font-size: 12.5px;
+    color: var(--ink-4);
+    margin-bottom: 24px;
+    font-family: 'Geist Mono', monospace;
+  }
+  .price-card.featured .price-billed { color: rgba(255,255,255,0.4); }
+  .price-cta { margin-bottom: 28px; }
+  .price-card.featured .btn-outline {
+    border-color: rgba(255,255,255,0.18);
+    color: #fff;
+    background: rgba(255,255,255,0.04);
+  }
+  .price-card.featured .btn-outline:hover {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+  .price-feats-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-4);
+    margin-bottom: 14px;
+  }
+  .price-card.featured .price-feats-label { color: rgba(255,255,255,0.4); }
+  .price-feats {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .price-feat {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .price-feat::before {
+    content: '✓';
+    color: var(--blue);
+    flex-shrink: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .price-card.featured .price-feat::before { color: #60a5fa; }
+  .price-card.featured .price-feat span { color: rgba(255,255,255,0.85); }
+  .price-feat strong {
+    font-weight: 500;
+    background: var(--bg-soft);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+  }
+  .price-card.featured .price-feat strong {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  /* CALCULATOR */
+  .calc-section {
+    padding: 96px 0;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .calc-head { text-align: center; margin-bottom: 48px; }
+  .calc-head h2 {
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+  }
+  .calc-head p {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .calc-card {
+    max-width: 920px;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -8px rgba(11,18,32,0.08);
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .calc-inputs {
+    padding: 36px;
+    border-right: 1px solid var(--line);
+  }
+  .calc-result {
+    padding: 36px;
+    background: linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .calc-result::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .calc-result > * { position: relative; z-index: 2; }
+  .calc-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .calc-input-group { margin-bottom: 28px; }
+  .calc-input-group:last-child { margin-bottom: 0; }
+  .calc-value {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: var(--line);
+    border-radius: 100px;
+    outline: none;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.4), 0 0 0 1px var(--blue);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px;
+    background: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.4), 0 0 0 1px var(--blue);
+  }
+  .calc-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .calc-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13.5px;
+  }
+  .calc-check:hover { border-color: var(--ink-4); }
+  .calc-check input { accent-color: var(--blue); cursor: pointer; }
+  .calc-check.checked { border-color: var(--blue); background: var(--blue-soft); }
+
+  .calc-result-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+    font-family: 'Geist Mono', monospace;
+  }
+  .calc-result-plan {
+    font-size: 13px;
+    color: rgba(96,165,250,1);
+    background: rgba(96,165,250,0.1);
+    border: 1px solid rgba(96,165,250,0.2);
+    padding: 4px 10px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Geist Mono', monospace;
+  }
+  .calc-result-num {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .calc-result-period {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .calc-result-breakdown {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    font-family: 'Geist Mono', monospace;
+  }
+  .calc-bd-row {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255,255,255,0.7);
+  }
+  .calc-bd-row strong { color: #fff; font-weight: 500; }
+  .calc-result-cta { margin-top: 24px; }
+  .calc-result-cta .btn {
+    background: var(--blue);
+    color: #fff;
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+  }
+  .calc-result-cta .btn:hover { background: var(--blue-strong); }
+
+  /* COMPARISON TABLE */
+  .compare-section { padding: 96px 0; }
+  .compare-head { text-align: center; margin-bottom: 56px; }
+  .compare-head h2 {
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+  }
+  .compare-head p {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .compare-table-wrap {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compare-table thead th {
+    padding: 24px 20px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 14px;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+  }
+  .compare-table thead th:first-child {
+    width: 40%;
+    color: var(--ink-3);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .compare-table thead th .plan-name {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin-bottom: 2px;
+    display: block;
+  }
+  .compare-table thead th .plan-price {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+  .compare-table thead th.featured-col {
+    background: linear-gradient(180deg, var(--blue-soft) 0%, var(--bg-soft) 100%);
+    border-bottom-color: var(--blue);
+    position: relative;
+  }
+  .compare-table thead th.featured-col .plan-name { color: var(--blue-strong); }
+  .compare-table thead th.featured-col::after {
+    content: 'POPULAR';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--blue);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    font-family: 'Geist Mono', monospace;
+  }
+  .compare-table tbody tr:hover { background: var(--bg-soft); }
+  .compare-table tbody td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .compare-table tbody tr:last-child td { border-bottom: none; }
+  .compare-table tbody td:first-child {
+    color: var(--ink-2);
+    font-weight: 450;
+  }
+  .compare-table tbody td.featured-col {
+    background: rgba(239,246,255,0.5);
+  }
+  .compare-table .group-row td {
+    background: var(--bg-soft);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    padding: 12px 20px;
+  }
+  .check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-size: 11px;
+  }
+  .x-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    color: var(--ink-4);
+    font-size: 11px;
+  }
+  .help-tip {
+    display: inline-flex;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--line);
+    color: var(--ink-3);
+    font-size: 9px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    cursor: help;
+    font-family: 'Geist Mono', monospace;
+    font-weight: 500;
+  }
+
+  /* TRUST */
+  .trust {
+    padding: 56px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .trust-item h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .trust-item p {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+  }
+  .trust-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--blue);
+  }
+
+  /* FAQ */
+  .faq-section { padding: 96px 0; }
+  .faq-head { text-align: center; margin-bottom: 56px; }
+  .faq-head h2 {
+    font-size: clamp(32px, 4vw, 42px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+  }
+  .faq-head p {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .faq-list {
+    max-width: 820px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q {
+    padding: 22px 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    transition: color 0.15s;
+    user-select: none;
+    list-style: none;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q:hover { color: var(--blue); }
+  .faq-toggle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    color: var(--ink-3);
+    transition: all 0.2s;
+  }
+  details[open] .faq-toggle {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    padding: 0 0 22px;
+    color: var(--ink-3);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 720px;
+  }
+  .faq-a code {
+    background: var(--bg-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--blue-strong);
+    border: 1px solid var(--line);
+  }
+
+  /* CTA */
+  .cta {
+    padding: 96px 0;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, var(--blue-soft) 0%, transparent 70%),
+      var(--bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .cta h2 {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+  .cta p {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  /* FOOTER */
+  footer { padding: 64px 0 32px; }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+  .foot-brand p {
+    font-size: 13.5px; color: var(--ink-3); margin-top: 16px;
+    max-width: 280px; line-height: 1.55;
+  }
+  .foot-by {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--ink-4);
+  }
+  .foot-by a {
+    color: var(--blue); font-weight: 500;
+    text-decoration: underline; text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .foot-col h5 { font-size: 13px; font-weight: 500; margin-bottom: 16px; }
+  .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col a {
+    font-size: 13.5px; color: var(--ink-3);
+    transition: color 0.15s;
+  }
+  .foot-col a:hover { color: var(--blue); }
+  .foot-bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--ink-4);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 480px; }
+    .price-card.featured { transform: none; }
+    .calc-grid { grid-template-columns: 1fr; }
+    .calc-inputs { border-right: none; border-bottom: 1px solid var(--line); }
+    .compare-table-wrap { overflow-x: auto; }
+    .compare-table { min-width: 700px; }
+    .trust-grid { grid-template-columns: 1fr 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  @media (max-width: 560px) {
+    .page-header { padding: 48px 0 24px; }
+    .pricing-section, .calc-section, .compare-section, .faq-section, .cta { padding: 56px 0; }
+    .calc-inputs, .calc-result { padding: 24px; }
+    .calc-result-num { font-size: 44px; }
+    .trust-grid { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .foot-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-row">
+    <div class="nav-left">
+      <a href="/" class="logo">
+        <span class="logo-mark"></span>
+        HyperSync
+        <span class="logo-by">by HSB</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Product</a></li>
+        <li><a href="#">Docs</a></li>
+        <li><a href="#" class="active">Pricing</a></li>
+        <li><a href="#">Customers</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="btn btn-ghost">Sign in</a>
+      <a href="#" class="btn btn-primary">Start for free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+  <div class="container">
+    <div class="eyebrow">Pricing</div>
+    <h1>Pague pelo que <span class="accent">usar.</span><br>Comece de graça.</h1>
+    <p>Tier gratuito permanente com tudo que você precisa pra construir. Cobramos quando você precisa de volume, SSO ou suporte dedicado.</p>
+
+    <div class="billing-toggle" role="tablist">
+      <div class="slider" id="slider" style="width: 90px; left: 4px;"></div>
+      <button class="active" data-billing="monthly" onclick="setBilling('monthly')">Mensal</button>
+      <button data-billing="annual" onclick="setBilling('annual')">Anual<span class="save-badge">−20%</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING CARDS -->
+<section class="pricing-section">
+  <div class="container">
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <span class="price-tag">free</span>
+        <div class="price-name">Hobby</div>
+        <p class="price-desc">Pra desenvolvedores prototipando integrações ou estudando o produto.</p>
+        <div class="price-amount">
+          <span class="price-amount-num">R$ 0</span>
+          <span class="price-amount-period">/sempre</span>
+        </div>
+        <div class="price-billed">sem cartão de crédito</div>
+        <a href="#" class="btn btn-outline btn-block price-cta">Começar grátis</a>
+
+        <div class="price-feats-label">Inclui</div>
+        <ul class="price-feats">
+          <li class="price-feat"><span><strong>10k</strong> chamadas de API/mês</span></li>
+          <li class="price-feat"><span><strong>3</strong> endpoints ativos</span></li>
+          <li class="price-feat"><span>1 ambiente Protheus</span></li>
+          <li class="price-feat"><span>Logs de auditoria por <strong>7d</strong></span></li>
+          <li class="price-feat"><span>Suporte via comunidade</span></li>
+        </ul>
+      </div>
+
+      <div class="price-card featured">
+        <span class="price-tag">Mais popular</span>
+        <div class="price-name">Pro</div>
+        <p class="price-desc">Pra times rodando integrações Protheus em produção.</p>
+        <div class="price-amount">
+          <span class="price-amount-currency">R$</span>
+          <span class="price-amount-num" data-monthly="2.490" data-annual="1.990">2.490</span>
+          <span class="price-amount-period">/mês</span>
+        </div>
+        <div class="price-billed" data-monthly="cobrado mensalmente" data-annual="cobrado anualmente · R$ 23.880/ano">cobrado mensalmente</div>
+        <a href="#" class="btn btn-outline btn-block price-cta">Trial de 14 dias</a>
+
+        <div class="price-feats-label">Tudo do Hobby, mais</div>
+        <ul class="price-feats">
+          <li class="price-feat"><span><strong>1M</strong> chamadas de API/mês</span></li>
+          <li class="price-feat"><span>Endpoints ilimitados</span></li>
+          <li class="price-feat"><span>Filas assíncronas + webhooks</span></li>
+          <li class="price-feat"><span>Pipelines de duas etapas</span></li>
+          <li class="price-feat"><span>Logs de auditoria por <strong>90d</strong></span></li>
+          <li class="price-feat"><span>Múltiplos ambientes</span></li>
+          <li class="price-feat"><span>Suporte prioritário por email</span></li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <span class="price-tag">custom</span>
+        <div class="price-name">Enterprise</div>
+        <p class="price-desc">Pra multinacionais com compliance, SSO e suporte dedicado.</p>
+        <div class="price-amount">
+          <span class="price-amount-num">Custom</span>
+        </div>
+        <div class="price-billed">contrato anual + volume</div>
+        <a href="#" class="btn btn-outline btn-block price-cta">Falar com vendas</a>
+
+        <div class="price-feats-label">Tudo do Pro, mais</div>
+        <ul class="price-feats">
+          <li class="price-feat"><span>Volume ilimitado · pricing por uso</span></li>
+          <li class="price-feat"><span>SSO · SAML · SCIM</span></li>
+          <li class="price-feat"><span>Deploy on-premise ou cloud privada</span></li>
+          <li class="price-feat"><span>SLA dedicado · 99.95%</span></li>
+          <li class="price-feat"><span>Slack channel direto com engenharia</span></li>
+          <li class="price-feat"><span><strong>40h</strong> de consultoria HSB inclusas</span></li>
+          <li class="price-feat"><span>DPA e LGPD assinados</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="container">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">⚿</div>
+        <h4>SOC 2 em andamento</h4>
+        <p>Auditoria iniciada com Vanta. Type II previsto para 2026.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">⊘</div>
+        <h4>Sem lock-in</h4>
+        <p>Cancele a qualquer momento. Exporte tudo via API.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">↻</div>
+        <h4>Trial sem cartão</h4>
+        <p>14 dias completos no Pro. Pague só se decidir continuar.</p>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">$</div>
+        <h4>Pague em BRL</h4>
+        <p>NF-e brasileira. Boleto, Pix ou cartão recorrente via Asaas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="calc-section">
+  <div class="container">
+    <div class="calc-head">
+      <div class="eyebrow">Calculadora</div>
+      <h2>Quanto vai custar pro seu volume?</h2>
+      <p>Ajuste o uso esperado e a gente te mostra o plano certo em tempo real.</p>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+
+          <div class="calc-input-group">
+            <div class="calc-label">
+              <span>Chamadas de API por mês</span>
+              <span class="calc-value" id="callsValue">250.000</span>
+            </div>
+            <input type="range" id="callsSlider" min="0" max="100" value="25" oninput="updateCalc()">
+          </div>
+
+          <div class="calc-input-group">
+            <div class="calc-label">
+              <span>Endpoints ativos</span>
+              <span class="calc-value" id="endpointsValue">8</span>
+            </div>
+            <input type="range" id="endpointsSlider" min="1" max="50" value="8" oninput="updateCalc()">
+          </div>
+
+          <div class="calc-input-group">
+            <div class="calc-label">
+              <span>Ambientes Protheus</span>
+              <span class="calc-value" id="envValue">2</span>
+            </div>
+            <input type="range" id="envSlider" min="1" max="10" value="2" oninput="updateCalc()">
+          </div>
+
+          <div class="calc-input-group">
+            <div class="calc-label" style="margin-bottom: 12px;"><span>Recursos adicionais</span></div>
+            <div class="calc-checks">
+              <label class="calc-check" id="ssoCheck">
+                <input type="checkbox" id="sso" onchange="updateCalc()">
+                <span>SSO / SAML</span>
+              </label>
+              <label class="calc-check" id="onpremCheck">
+                <input type="checkbox" id="onprem" onchange="updateCalc()">
+                <span>Deploy on-premise</span>
+              </label>
+              <label class="calc-check" id="slaCheck">
+                <input type="checkbox" id="sla" onchange="updateCalc()">
+                <span>SLA dedicado 99.95%</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+        <div class="calc-result">
+          <div>
+            <div class="calc-result-tag">Plano recomendado</div>
+            <div class="calc-result-plan" id="planName">Pro</div>
+            <div class="calc-result-num" id="resultPrice">R$ 2.490</div>
+            <div class="calc-result-period" id="resultPeriod">por mês · cobrado mensalmente</div>
+
+            <div class="calc-result-breakdown">
+              <div class="calc-bd-row">
+                <span>Plano base</span>
+                <strong id="bdBase">R$ 2.490</strong>
+              </div>
+              <div class="calc-bd-row" id="bdOverageRow" style="display: none;">
+                <span>Overage de chamadas</span>
+                <strong id="bdOverage">R$ 0</strong>
+              </div>
+              <div class="calc-bd-row" id="bdAddonsRow" style="display: none;">
+                <span>Add-ons</span>
+                <strong id="bdAddons">R$ 0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-result-cta">
+            <a href="#" class="btn btn-lg" id="resultCta">Começar trial de 14 dias →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="compare-section">
+  <div class="container">
+    <div class="compare-head">
+      <div class="eyebrow">Comparação completa</div>
+      <h2>Compare todos os recursos.</h2>
+      <p>Tudo que tem em cada plano, lado a lado.</p>
+    </div>
+
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Recurso</th>
+            <th><span class="plan-name">Hobby</span><span class="plan-price">R$ 0/mês</span></th>
+            <th class="featured-col"><span class="plan-name">Pro</span><span class="plan-price">R$ 2.490/mês</span></th>
+            <th><span class="plan-name">Enterprise</span><span class="plan-price">Custom</span></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="group-row"><td colspan="4">Volume e limites</td></tr>
+          <tr>
+            <td>Chamadas de API por mês <span class="help-tip">?</span></td>
+            <td>10.000</td>
+            <td class="featured-col">1.000.000</td>
+            <td>Ilimitado</td>
+          </tr>
+          <tr>
+            <td>Endpoints ativos</td>
+            <td>3</td>
+            <td class="featured-col">Ilimitado</td>
+            <td>Ilimitado</td>
+          </tr>
+          <tr>
+            <td>Ambientes Protheus</td>
+            <td>1</td>
+            <td class="featured-col">5</td>
+            <td>Ilimitado</td>
+          </tr>
+          <tr>
+            <td>Membros do time</td>
+            <td>1</td>
+            <td class="featured-col">10</td>
+            <td>Ilimitado</td>
+          </tr>
+
+          <tr class="group-row"><td colspan="4">Plataforma</td></tr>
+          <tr>
+            <td>API builder low-code</td>
+            <td><span class="check-icon">✓</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Consultas dinâmicas (GraphQL-like)</td>
+            <td><span class="check-icon">✓</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Filas assíncronas</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Webhooks (signed payloads)</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Pipelines de duas etapas</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Dead-letter queue + retries</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+
+          <tr class="group-row"><td colspan="4">Segurança e auditoria</td></tr>
+          <tr>
+            <td>Logs de auditoria</td>
+            <td>7 dias</td>
+            <td class="featured-col">90 dias</td>
+            <td>Ilimitado + export</td>
+          </tr>
+          <tr>
+            <td>Token rotation</td>
+            <td><span class="check-icon">✓</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Permissões granulares (RBAC)</td>
+            <td>Básico</td>
+            <td class="featured-col">Avançado</td>
+            <td>Custom roles</td>
+          </tr>
+          <tr>
+            <td>SSO · SAML · SCIM</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>DPA · LGPD assinados</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+
+          <tr class="group-row"><td colspan="4">Deploy e infraestrutura</td></tr>
+          <tr>
+            <td>Cloud gerenciada (BR)</td>
+            <td><span class="check-icon">✓</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Deploy on-premise</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>VPC peering · IP allowlist</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>SLA</td>
+            <td>Best effort</td>
+            <td class="featured-col">99.9%</td>
+            <td>99.95%</td>
+          </tr>
+
+          <tr class="group-row"><td colspan="4">Suporte</td></tr>
+          <tr>
+            <td>Documentação completa</td>
+            <td><span class="check-icon">✓</span></td>
+            <td class="featured-col"><span class="check-icon">✓</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Suporte por email</td>
+            <td>72h</td>
+            <td class="featured-col">8h prioritário</td>
+            <td>2h dedicado</td>
+          </tr>
+          <tr>
+            <td>Slack channel com engenharia</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td><span class="check-icon">✓</span></td>
+          </tr>
+          <tr>
+            <td>Horas de consultoria HSB</td>
+            <td><span class="x-icon">−</span></td>
+            <td class="featured-col"><span class="x-icon">−</span></td>
+            <td>40h/ano inclusas</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-head">
+      <div class="eyebrow">FAQ</div>
+      <h2>Perguntas frequentes.</h2>
+      <p>Não achou o que precisa? <a href="#" style="color: var(--blue);">Fale com nosso time →</a></p>
+    </div>
+
+    <div class="faq-list">
+
+      <details class="faq-item" open>
+        <summary class="faq-q">
+          <span>O que conta como "chamada de API"?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Cada requisição HTTP que chega no HyperSync conta como uma chamada — independente do verbo (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) ou do tamanho do payload. Webhooks recebidos e disparados também contam. Chamadas que falham com erro 4xx/5xx não são cobradas.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>O que acontece se eu estourar o limite do meu plano?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Avisamos com 80% e 100% por email. No Hobby, chamadas excedentes são rejeitadas com <code>429 Too Many Requests</code>. No Pro, você pode habilitar overage (R$ 0,002 por chamada extra) ou subir de plano. No Enterprise, contratos por volume, sem teto.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Posso rodar HyperSync on-premise?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Sim, mas só no plano Enterprise. Entregamos a imagem Docker + Helm chart pra rodar no seu Kubernetes, ou um instalador standalone Linux. Atualizações ficam sob seu controle, com janelas de manutenção combinadas.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Quais versões do Protheus são suportadas?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Protheus 12.1.x em diante, incluindo as builds 12.1.2210, 12.1.2310 e 12.1.2410. Para versões anteriores (11.x ou 12.0), oferecemos suporte estendido via consultoria HSB no plano Enterprise.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Como funciona o trial de 14 dias?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Acesso completo ao plano Pro por 14 dias, sem precisar informar cartão. Ao final, você escolhe: mantém Pro (aí sim pedimos pagamento), volta pro Hobby (gratuito) ou cancela tudo. Os dados ficam intactos por 30 dias caso queira reativar.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Posso pagar via boleto ou PIX?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Sim. No Pro mensal: cartão recorrente, boleto ou PIX. No Pro anual: as três opções acima ou faturamento direto via NF-e com prazo de 30 dias. No Enterprise: contrato anual com fatura em BRL ou USD.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Como o HyperSync se conecta com a consultoria HSB?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">No plano Enterprise, 40h anuais de consultoria sênior HSB ficam inclusas — pra arquitetura, code review, otimização ou implementação assistida. Times que precisam de mais profundidade técnica podem contratar projetos de consultoria complementares através do <a href="#" style="color: var(--blue);">institucional da HSB</a>.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Quais são as garantias de SLA?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Pro: 99.9% mensal de uptime, com créditos automáticos em caso de descumprimento. Enterprise: 99.95% com SLA contratual, RTO de 1h e RPO de 5min. Status público em tempo real em <code>status.hypersync.com.br</code>.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Posso cancelar a qualquer momento?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">Sim, sem multa. No mensal, cancela e o acesso vai até o fim do ciclo já pago. No anual, cancela e a gente reembolsa proporcional aos meses não usados (menos taxa administrativa de 10%). Você sempre pode exportar todos os seus dados via API antes de sair.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>HyperSync é homologado pela TOTVS?</span>
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-a">A HSB Consultoria é parceira homologada TOTVS. O HyperSync é um produto independente que se integra ao Protheus via APIs e ADVPL — Protheus, ADVPL e TOTVS são marcas registradas da TOTVS S.A.</div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Pronto pra começar?</h2>
+    <p>Tier gratuito permanente. Sem cartão de crédito. Production-ready desde o primeiro deploy.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-primary btn-lg">Começar grátis →</a>
+      <a href="#" class="btn btn-outline btn-lg">Falar com vendas</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          HyperSync
+        </div>
+        <p>Plataforma low-code de integração para TOTVS Protheus. Construído por engenheiros que rodam Protheus em produção.</p>
+        <div class="foot-by">Um produto da <a href="https://hsbconsultoria.com.br">HSB Consultoria</a></div>
+      </div>
+      <div class="foot-col">
+        <h5>Produto</h5>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Developers</h5>
+        <ul>
+          <li><a href="#">Documentação</a></li>
+          <li><a href="#">API reference</a></li>
+          <li><a href="#">Examples</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Empresa</h5>
+        <ul>
+          <li><a href="#">Customers</a></li>
+          <li><a href="#">Sobre HSB ↗</a></li>
+          <li><a href="#">Consultoria ↗</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Termos</a></li>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">Segurança</a></li>
+          <li><a href="#">DPA / LGPD</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 HSB Soluções de Tecnologia</div>
+      <div>Protheus, ADVPL e TOTVS são marcas registradas da TOTVS S.A.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Billing toggle
+  const slider = document.getElementById('slider');
+  function setBilling(period) {
+    document.querySelectorAll('.billing-toggle button').forEach(b => b.classList.remove('active'));
+    document.querySelector(`[data-billing="${period}"]`).classList.add('active');
+
+    const buttons = document.querySelectorAll('.billing-toggle button');
+    if (period === 'monthly') {
+      slider.style.left = '4px';
+      slider.style.width = buttons[0].offsetWidth + 'px';
+    } else {
+      slider.style.left = (buttons[0].offsetWidth + 4) + 'px';
+      slider.style.width = buttons[1].offsetWidth + 'px';
+    }
+
+    // Update price cards
+    document.querySelectorAll('[data-monthly][data-annual]').forEach(el => {
+      el.textContent = el.dataset[period];
+    });
+
+    updateCalc();
+  }
+
+  // Initialize slider width
+  window.addEventListener('load', () => {
+    const buttons = document.querySelectorAll('.billing-toggle button');
+    slider.style.width = buttons[0].offsetWidth + 'px';
+  });
+
+  // Calculator
+  function updateCalc() {
+    const callsPos = +document.getElementById('callsSlider').value;
+    // Exponential scale: 0 -> 5k, 100 -> 10M
+    const calls = Math.round(5000 * Math.pow(2000, callsPos / 100));
+    const endpoints = +document.getElementById('endpointsSlider').value;
+    const env = +document.getElementById('envSlider').value;
+    const sso = document.getElementById('sso').checked;
+    const onprem = document.getElementById('onprem').checked;
+    const sla = document.getElementById('sla').checked;
+
+    document.getElementById('callsValue').textContent = formatNumber(calls);
+    document.getElementById('endpointsValue').textContent = endpoints;
+    document.getElementById('envValue').textContent = env;
+
+    document.getElementById('ssoCheck').classList.toggle('checked', sso);
+    document.getElementById('onpremCheck').classList.toggle('checked', onprem);
+    document.getElementById('slaCheck').classList.toggle('checked', sla);
+
+    // Determine plan
+    const billing = document.querySelector('.billing-toggle button.active').dataset.billing;
+    const enterprise = sso || onprem || sla || calls > 1000000 || endpoints > 50 || env > 5;
+    const pro = !enterprise && (calls > 10000 || endpoints > 3 || env > 1);
+
+    let planName, basePrice, priceText, periodText, cta;
+
+    if (enterprise) {
+      planName = 'Enterprise';
+      priceText = 'Custom';
+      periodText = 'preço por volume · contrato anual';
+      basePrice = 'Custom';
+      cta = 'Falar com vendas →';
+      document.getElementById('bdOverageRow').style.display = 'none';
+      document.getElementById('bdAddonsRow').style.display = 'none';
+    } else if (pro) {
+      planName = 'Pro';
+      const proMonthly = billing === 'monthly' ? 2490 : 1990;
+      basePrice = proMonthly;
+
+      // overage
+      const included = 1000000;
+      const overage = Math.max(0, calls - included) * 0.002;
+
+      const total = proMonthly + overage;
+      priceText = 'R$ ' + formatNumber(Math.round(total));
+      periodText = billing === 'monthly' ? 'por mês · cobrado mensalmente' : 'por mês · cobrado anualmente';
+      cta = 'Começar trial de 14 dias →';
+
+      document.getElementById('bdBase').textContent = 'R$ ' + formatNumber(proMonthly);
+      if (overage > 0) {
+        document.getElementById('bdOverageRow').style.display = 'flex';
+        document.getElementById('bdOverage').textContent = 'R$ ' + formatNumber(Math.round(overage));
+      } else {
+        document.getElementById('bdOverageRow').style.display = 'none';
+      }
+      document.getElementById('bdAddonsRow').style.display = 'none';
+    } else {
+      planName = 'Hobby';
+      priceText = 'R$ 0';
+      periodText = 'gratuito · pra sempre';
+      basePrice = 0;
+      cta = 'Começar grátis →';
+      document.getElementById('bdBase').textContent = 'R$ 0';
+      document.getElementById('bdOverageRow').style.display = 'none';
+      document.getElementById('bdAddonsRow').style.display = 'none';
+    }
+
+    document.getElementById('planName').textContent = planName;
+    document.getElementById('resultPrice').textContent = priceText;
+    document.getElementById('resultPeriod').textContent = periodText;
+    document.getElementById('resultCta').textContent = cta;
+  }
+
+  function formatNumber(n) {
+    return n.toLocaleString('pt-BR');
+  }
+
+  updateCalc();
+</script>
+
+</body>
+</html>

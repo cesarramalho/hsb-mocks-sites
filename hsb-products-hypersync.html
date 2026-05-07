@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyperSync — HSB Consultoria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;450;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f9fc;
+    --ink: #0b1220;
+    --ink-2: #364153;
+    --ink-3: #64748b;
+    --ink-4: #94a3b8;
+    --line: #e4e9f0;
+    --line-soft: #eef2f7;
+    --blue: #2563eb;
+    --blue-strong: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --blue-tint: #dbeafe;
+    --green: #10b981;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'ss03', 'cv11';
+    overflow-x: hidden;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  ::selection { background: var(--blue); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .nav-left { display: flex; align-items: center; gap: 40px; }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 16px; letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .logo-mark::before {
+    content: 'H';
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { font-size: 14px; color: var(--ink-2); transition: color 0.15s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { font-weight: 500; }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    transition: all 0.15s; border: 1px solid transparent;
+    cursor: pointer; line-height: 1;
+  }
+  .btn-ghost { color: var(--ink-2); }
+  .btn-ghost:hover { background: var(--bg-soft); color: var(--ink); }
+  .btn-primary {
+    background: var(--blue); color: #fff;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-primary:hover { background: var(--blue-strong); }
+  .btn-outline { border-color: var(--line); color: var(--ink); background: var(--bg); }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-lg { padding: 12px 24px; font-size: 15px; }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .breadcrumb-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .breadcrumb-row a { color: var(--ink-3); transition: color 0.15s; }
+  .breadcrumb-row a:hover { color: var(--blue); }
+  .breadcrumb-row .sep { color: var(--ink-4); }
+  .breadcrumb-row .current { color: var(--ink); }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(37,99,235,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 2; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .product-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-bottom: 28px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .product-tag-mark {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.3);
+  }
+  .product-tag-mark::before {
+    content: '';
+    width: 7px; height: 7px;
+    border: 1.5px solid #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .product-tag strong { font-weight: 500; color: var(--ink); }
+  .product-tag .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--green);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    margin-left: 4px;
+    padding-left: 10px;
+    border-left: 1px solid var(--line);
+  }
+  .product-tag .live::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 5.5vw, 64px);
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    margin-bottom: 20px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-lede {
+    font-size: 19px;
+    color: var(--ink-3);
+    line-height: 1.55;
+    margin-bottom: 32px;
+    max-width: 580px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .hero-actions .btn-primary::after { content: '→'; }
+
+  .hero-meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+  }
+  .hero-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    font-family: 'Geist Mono', monospace;
+  }
+  .hero-meta-key { color: var(--ink-3); }
+  .hero-meta-val { color: var(--ink); font-weight: 500; }
+  .hero-meta-val a { color: var(--blue); }
+
+  /* HERO ASIDE - product card */
+  .hero-aside {
+    position: sticky;
+    top: 84px;
+  }
+  .product-preview {
+    background: linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 12px 32px -12px rgba(37,99,235,0.3);
+    position: relative;
+  }
+  .product-preview::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .preview-chrome {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  .preview-dots { display: flex; gap: 5px; }
+  .preview-dots span {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .preview-url {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+  }
+  .preview-body {
+    padding: 24px;
+    position: relative;
+  }
+  .preview-stat {
+    margin-bottom: 24px;
+  }
+  .preview-stat-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .preview-stat-num {
+    font-size: 36px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .preview-stat-trend {
+    font-size: 11.5px;
+    color: #4ade80;
+    font-family: 'Geist Mono', monospace;
+  }
+  .preview-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 60px;
+    margin-bottom: 24px;
+  }
+  .preview-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--blue) 0%, rgba(37,99,235,0.3) 100%);
+    border-radius: 3px 3px 0 0;
+    min-height: 8px;
+  }
+  .preview-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 16px;
+  }
+  .preview-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.7);
+    padding: 4px 0;
+  }
+  .preview-row strong { color: #fff; font-weight: 500; }
+  .preview-row .ok { color: #4ade80; }
+
+  /* SECTION */
+  section { padding: 96px 0; border-top: 1px solid var(--line); }
+  .sec-eyebrow {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px; color: var(--blue);
+    margin-bottom: 16px;
+    padding: 4px 10px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    border-radius: 100px;
+  }
+  .sec-title {
+    font-size: clamp(28px, 3.6vw, 38px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin-bottom: 14px;
+    max-width: 700px;
+  }
+  .sec-sub {
+    font-size: 16px;
+    color: var(--ink-3);
+    max-width: 580px;
+    line-height: 1.55;
+  }
+
+  /* PROBLEM */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .problem-card {
+    padding: 32px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  .problem-card.before {
+    background: var(--bg-soft);
+  }
+  .problem-card.after {
+    background: linear-gradient(180deg, var(--blue-soft) 0%, var(--bg) 100%);
+    border-color: var(--blue-tint);
+  }
+  .problem-tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .problem-card.before .problem-tag {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-3);
+  }
+  .problem-card.after .problem-tag {
+    background: var(--blue);
+    color: #fff;
+  }
+  .problem-card h3 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .problem-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .problem-list .x {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .problem-list .check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* HSB CONNECTION */
+  .connection {
+    background: var(--bg-soft);
+  }
+  .connection-card {
+    margin-top: 48px;
+    padding: 48px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .connection-card h3 {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .connection-card p {
+    color: var(--ink-3);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-size: 15.5px;
+  }
+  .connection-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--blue);
+    font-size: 14px;
+    font-weight: 500;
+    transition: gap 0.15s;
+  }
+  .connection-link:hover { gap: 10px; }
+
+  .connection-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+  }
+  .connection-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: center;
+    width: 100%;
+  }
+  .connection-node {
+    padding: 16px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .connection-node.product {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-strong) 100%);
+    color: #fff;
+    border-color: var(--blue);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+  }
+  .connection-node-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .connection-node-name {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .connection-arrow {
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    padding: 0 16px;
+    text-align: center;
+  }
+  .connection-arrow div {
+    margin-bottom: 4px;
+    font-size: 18px;
+  }
+  .connection-arrow span {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-4);
+  }
+
+  /* CASE */
+  .case-card {
+    margin-top: 48px;
+    padding: 48px;
+    background: linear-gradient(135deg, var(--blue-soft) 0%, var(--bg) 70%);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .case-quote {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+  .case-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .case-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .case-author-name { font-weight: 500; }
+  .case-author-role { color: var(--ink-3); font-size: 12.5px; }
+  .case-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .case-stat {
+    background: var(--bg);
+    padding: 18px;
+  }
+  .case-stat-num {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 5px;
+    color: var(--blue);
+  }
+  .case-stat-label {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  /* CTA */
+  .cta {
+    padding: 96px 0;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, var(--blue-soft) 0%, transparent 70%),
+      var(--bg);
+  }
+  .cta h2 {
+    font-size: clamp(32px, 4.5vw, 48px);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .cta h2 .accent { color: var(--blue); }
+  .cta p {
+    font-size: 17px;
+    color: var(--ink-3);
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .cta-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 32px auto;
+    max-width: 320px;
+    color: var(--ink-4);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .cta-divider::before, .cta-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .cta-secondary {
+    color: var(--ink-3);
+    font-size: 14px;
+  }
+  .cta-secondary a {
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  /* RELATED PRODUCTS */
+  .related {
+    background: var(--bg-soft);
+    border-top: 1px solid var(--line);
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .related-card {
+    padding: 24px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .related-card:hover {
+    border-color: var(--blue-tint);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -8px rgba(37,99,235,0.12);
+  }
+  .related-card-name {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .related-card-domain {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: var(--blue);
+  }
+  .related-card-desc {
+    font-size: 13.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .related-card-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    font-weight: 500;
+    transition: gap 0.15s;
+  }
+  .related-card:hover .related-card-arrow { gap: 8px; color: var(--blue); }
+
+  /* FOOTER */
+  footer { padding: 64px 0 32px; border-top: 1px solid var(--line); background: var(--bg); }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+  .foot-brand p {
+    font-size: 13.5px; color: var(--ink-3); margin-top: 16px;
+    max-width: 280px; line-height: 1.55;
+  }
+  .foot-col h5 { font-size: 13px; font-weight: 500; margin-bottom: 16px; }
+  .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .foot-col a {
+    font-size: 13.5px; color: var(--ink-3);
+    transition: color 0.15s;
+  }
+  .foot-col a:hover { color: var(--blue); }
+  .foot-bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--ink-4);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-aside { position: static; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .connection-card { grid-template-columns: 1fr; gap: 32px; padding: 32px; }
+    .case-card { grid-template-columns: 1fr; gap: 32px; padding: 32px; }
+    .related-grid { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  @media (max-width: 560px) {
+    .hero { padding: 48px 0; }
+    section, .cta { padding: 56px 0; }
+    .case-stats-grid { grid-template-columns: 1fr; }
+    .connection-flow { grid-template-columns: 1fr; }
+    .connection-arrow { transform: rotate(90deg); padding: 12px 0; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .foot-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-row">
+    <div class="nav-left">
+      <a href="/" class="logo">
+        <span class="logo-mark"></span>
+        HSB Consultoria
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">Work</a></li>
+        <li><a href="#">Capabilities</a></li>
+        <li><a href="#" class="active">Products</a></li>
+        <li><a href="#">Approach</a></li>
+        <li><a href="#">Insights</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="btn btn-ghost">Schedule a call</a>
+      <a href="#" class="btn btn-primary">Contact us →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <div class="container">
+    <div class="breadcrumb-row">
+      <a href="/">HSB</a>
+      <span class="sep">/</span>
+      <a href="/products">Products</a>
+      <span class="sep">/</span>
+      <span class="current">HyperSync</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="product-tag">
+          <span class="product-tag-mark"></span>
+          <strong>HyperSync</strong> · um produto da HSB
+          <span class="live">live · v2.4</span>
+        </div>
+        <h1>Integrações de produção para Protheus, <span class="accent">com a engenharia da HSB</span> por trás.</h1>
+        <p class="hero-lede">HyperSync é nossa plataforma low-code de integração para TOTVS Protheus. Nasceu de projetos de consultoria com clientes globais — hoje roda em produção na Disney processando 100k+ notas por mês.</p>
+        <div class="hero-actions">
+          <a href="https://hypersync.com.br" class="btn btn-primary btn-lg">Ir para hypersync.com.br</a>
+          <a href="#" class="btn btn-outline btn-lg">Ver caso de uso</a>
+        </div>
+        <div class="hero-meta-list">
+          <div class="hero-meta-row">
+            <span class="hero-meta-key">Categoria</span>
+            <span class="hero-meta-val">Integration platform</span>
+          </div>
+          <div class="hero-meta-row">
+            <span class="hero-meta-key">Modelo</span>
+            <span class="hero-meta-val">SaaS · self-serve · enterprise</span>
+          </div>
+          <div class="hero-meta-row">
+            <span class="hero-meta-key">Em produção desde</span>
+            <span class="hero-meta-val">2022</span>
+          </div>
+          <div class="hero-meta-row">
+            <span class="hero-meta-key">Site dedicado</span>
+            <span class="hero-meta-val"><a href="https://hypersync.com.br">hypersync.com.br ↗</a></span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <div class="product-preview">
+          <div class="preview-chrome">
+            <div class="preview-dots"><span></span><span></span><span></span></div>
+            <div class="preview-url">app.hypersync.com.br</div>
+          </div>
+          <div class="preview-body">
+            <div class="preview-stat">
+              <div class="preview-stat-label">API calls (last 24h)</div>
+              <div class="preview-stat-num">847,392</div>
+              <div class="preview-stat-trend">↗ +12.4% vs ontem</div>
+            </div>
+            <div class="preview-bars">
+              <div class="preview-bar" style="height: 30%;"></div>
+              <div class="preview-bar" style="height: 45%;"></div>
+              <div class="preview-bar" style="height: 38%;"></div>
+              <div class="preview-bar" style="height: 62%;"></div>
+              <div class="preview-bar" style="height: 55%;"></div>
+              <div class="preview-bar" style="height: 78%;"></div>
+              <div class="preview-bar" style="height: 88%;"></div>
+              <div class="preview-bar" style="height: 72%;"></div>
+              <div class="preview-bar" style="height: 95%;"></div>
+              <div class="preview-bar" style="height: 100%;"></div>
+            </div>
+            <div class="preview-rows">
+              <div class="preview-row">
+                <span>Endpoints</span>
+                <strong>24 active</strong>
+              </div>
+              <div class="preview-row">
+                <span>Avg latency</span>
+                <strong class="ok">42ms</strong>
+              </div>
+              <div class="preview-row">
+                <span>Uptime (30d)</span>
+                <strong class="ok">99.97%</strong>
+              </div>
+              <div class="preview-row">
+                <span>Queue depth</span>
+                <strong>0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM/SOLUTION -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow">O problema</div>
+    <h2 class="sec-title">Integrar com Protheus sempre custou caro.</h2>
+    <p class="sec-sub">Cada nova integração no Protheus pede ADVPL, autenticação, queue, logs, retry, idempotência. É o mesmo trabalho repetido em todo projeto. HyperSync corta isso na raiz.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card before">
+        <span class="problem-tag">Sem HyperSync</span>
+        <h3>Cada integração vira projeto de mês.</h3>
+        <ul class="problem-list">
+          <li><span class="x">×</span><span>Boilerplate ADVPL escrito do zero a cada integração</span></li>
+          <li><span class="x">×</span><span>Autenticação e auditoria implementadas caso a caso</span></li>
+          <li><span class="x">×</span><span>Sem fila — operações pesadas travam o Protheus</span></li>
+          <li><span class="x">×</span><span>Sem visibilidade de erro ou retry automatizado</span></li>
+          <li><span class="x">×</span><span>Cada cliente reinventa a mesma roda</span></li>
+        </ul>
+      </div>
+      <div class="problem-card after">
+        <span class="problem-tag">Com HyperSync</span>
+        <h3>API pronta em horas, não meses.</h3>
+        <ul class="problem-list">
+          <li><span class="check">✓</span><span>Defina endpoints com schema JSON, sem ADVPL boilerplate</span></li>
+          <li><span class="check">✓</span><span>Auth, RBAC e logs de auditoria nativos</span></li>
+          <li><span class="check">✓</span><span>Filas assíncronas isolam o Protheus do tráfego</span></li>
+          <li><span class="check">✓</span><span>Dead-letter queue, retry exponencial, alertas</span></li>
+          <li><span class="check">✓</span><span>Compatível com Protheus 12.1.x, on-premise ou cloud</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HSB CONNECTION -->
+<section class="connection">
+  <div class="container">
+    <div class="sec-eyebrow">Por que HSB</div>
+    <h2 class="sec-title">Construído por quem implementa Protheus há 12 anos.</h2>
+    <p class="sec-sub">HyperSync não é um produto genérico de uma startup que ouviu falar de ERP brasileiro. É a plataforma que a HSB construiu pra resolver os mesmos problemas que aparecem em projetos de consultoria há mais de uma década.</p>
+
+    <div class="connection-card">
+      <div>
+        <h3>Vantagem do funil cruzado.</h3>
+        <p>Times que crescem usando HyperSync já chegam preparados para conversas mais profundas sobre arquitetura. Times que contratam consultoria HSB recebem HyperSync incluso quando faz sentido. Os dois mundos se reforçam.</p>
+        <a href="#" class="connection-link">Conheça nossa abordagem de consultoria →</a>
+      </div>
+      <div class="connection-visual">
+        <div class="connection-flow">
+          <div class="connection-node product">
+            <div class="connection-node-label">Produto</div>
+            <div class="connection-node-name">HyperSync</div>
+          </div>
+          <div class="connection-arrow">
+            <div>⇌</div>
+            <span>cruzado</span>
+          </div>
+          <div class="connection-node">
+            <div class="connection-node-label">Consultoria</div>
+            <div class="connection-node-name">HSB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE -->
+<section>
+  <div class="container">
+    <div class="sec-eyebrow">Em produção</div>
+    <h2 class="sec-title">Como a Disney usa HyperSync.</h2>
+
+    <div class="case-card">
+      <div>
+        <p class="case-quote">"Precisávamos de um pipeline robusto para ingerir notas de fornecedores no Protheus, com validação e enfileiramento. HyperSync nos entregou isso em semanas — não meses."</p>
+        <div class="case-author">
+          <div class="case-avatar">D</div>
+          <div>
+            <div class="case-author-name">Engineering team</div>
+            <div class="case-author-role">The Walt Disney Company</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-stats-grid">
+        <div class="case-stat">
+          <div class="case-stat-num">100k+</div>
+          <div class="case-stat-label">Notas / mês</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">94%</div>
+          <div class="case-stat-label">Retrabalho eliminado</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">3.2s</div>
+          <div class="case-stat-label">Latência média</div>
+        </div>
+        <div class="case-stat">
+          <div class="case-stat-num">99.97%</div>
+          <div class="case-stat-label">Uptime do pipeline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Dois caminhos<br>pra <span class="accent">começar.</span></h2>
+    <p>Self-serve no produto direto, ou implementação assistida pelo time de consultoria.</p>
+    <div class="cta-actions">
+      <a href="https://hypersync.com.br" class="btn btn-primary btn-lg">Acessar hypersync.com.br →</a>
+      <a href="#" class="btn btn-outline btn-lg">Falar com consultor</a>
+    </div>
+    <div class="cta-divider">ou</div>
+    <p class="cta-secondary">Quer entender se HyperSync é certo pro seu caso? <a href="#">Agende 30min com um sócio →</a></p>
+  </div>
+</section>
+
+<!-- RELATED -->
+<section class="related">
+  <div class="container">
+    <div class="sec-eyebrow">Outros produtos</div>
+    <h2 class="sec-title">Mais ferramentas do ecossistema HSB.</h2>
+
+    <div class="related-grid">
+      <a href="#" class="related-card">
+        <div>
+          <div class="related-card-name">Visão Contábil</div>
+          <div class="related-card-domain">visao.com.br ↗</div>
+        </div>
+        <p class="related-card-desc">Análise de dados contábeis sobre Protheus. Drill-down em razão e diagnóstico fiscal contínuo.</p>
+        <span class="related-card-arrow">Ver produto →</span>
+      </a>
+      <a href="#" class="related-card">
+        <div>
+          <div class="related-card-name">Tax Follow-Up</div>
+          <div class="related-card-domain">taxfollowup.com.br ↗</div>
+        </div>
+        <p class="related-card-desc">Gestão de processos do time fiscal. Workflow, SLA tracking e compliance.</p>
+        <span class="related-card-arrow">Ver produto →</span>
+      </a>
+      <a href="#" class="related-card">
+        <div>
+          <div class="related-card-name">Tax OneWay</div>
+          <div class="related-card-domain">taxoneway.com.br ↗</div>
+        </div>
+        <p class="related-card-desc">Obrigações acessórias para empresas em SAP, Oracle ou recuperação direta de dados.</p>
+        <span class="related-card-arrow">Ver produto →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          HSB Consultoria
+        </div>
+        <p>Engenharia Protheus para empresas que não podem errar.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Empresa</h5>
+        <ul>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Time</a></li>
+          <li><a href="#">Carreiras</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Trabalho</h5>
+        <ul>
+          <li><a href="#">Cases</a></li>
+          <li><a href="#">Capabilities</a></li>
+          <li><a href="#">Approach</a></li>
+          <li><a href="#">Insights</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Produtos</h5>
+        <ul>
+          <li><a href="#">HyperSync ↗</a></li>
+          <li><a href="#">Visão Contábil ↗</a></li>
+          <li><a href="#">Tax Follow-Up ↗</a></li>
+          <li><a href="#">Tax OneWay ↗</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Contato</h5>
+        <ul>
+          <li><a href="#">contato@hsb.com.br</a></li>
+          <li><a href="#">+55 11 97081-1575</a></li>
+          <li><a href="#">LinkedIn ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 HSB Soluções de Tecnologia · Homologada TOTVS</div>
+      <div>Protheus, ADVPL e TOTVS são marcas registradas da TOTVS S.A.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

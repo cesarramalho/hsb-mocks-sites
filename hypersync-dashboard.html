@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — HyperSync</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;450;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafbfc;
+    --panel: #ffffff;
+    --panel-soft: #f7f9fc;
+    --ink: #0b1220;
+    --ink-2: #364153;
+    --ink-3: #64748b;
+    --ink-4: #94a3b8;
+    --line: #e4e9f0;
+    --line-soft: #eef2f7;
+    --blue: #2563eb;
+    --blue-strong: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --blue-tint: #dbeafe;
+    --green: #10b981;
+    --green-soft: #d1fae5;
+    --amber: #f59e0b;
+    --amber-soft: #fef3c7;
+    --red: #ef4444;
+    --red-soft: #fee2e2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'ss03', 'cv11';
+    overflow-x: hidden;
+    font-size: 14px;
+  }
+  ::selection { background: var(--blue); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  code, .mono { font-family: 'Geist Mono', monospace; font-feature-settings: 'ss02', 'ss03'; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* APP LAYOUT */
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sb-logo {
+    padding: 8px 12px 16px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sb-logo-row {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 15px; letter-spacing: -0.02em;
+  }
+  .sb-logo-mark {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--blue) 0%, #60a5fa 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .sb-logo-mark::before {
+    content: '';
+    width: 9px; height: 9px;
+    border: 1.5px solid #fff;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+  .sb-org-switcher {
+    display: flex; align-items: center;
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 10px;
+    justify-content: center;
+  }
+  .sb-section {
+    padding: 12px 12px 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .sb-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    transition: all 0.15s;
+    cursor: pointer;
+    position: relative;
+  }
+  .sb-item:hover { background: var(--bg); color: var(--ink); }
+  .sb-item.active {
+    background: var(--blue-soft);
+    color: var(--blue-strong);
+    font-weight: 500;
+  }
+  .sb-item-icon {
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-3);
+    flex-shrink: 0;
+  }
+  .sb-item.active .sb-item-icon { color: var(--blue); }
+  .sb-item-badge {
+    margin-left: auto;
+    padding: 1px 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .sb-item.active .sb-item-badge {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+
+  .sb-bottom {
+    margin-top: auto;
+    padding: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .sb-usage {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .sb-usage-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .sb-usage-label {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+  }
+  .sb-usage-pct {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .sb-usage-bar {
+    height: 4px;
+    background: var(--line);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .sb-usage-fill {
+    height: 100%;
+    width: 64%;
+    background: linear-gradient(90deg, var(--blue) 0%, #60a5fa 100%);
+    border-radius: 100px;
+  }
+  .sb-usage-text {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+  }
+  .sb-usage-text strong { color: var(--ink); font-weight: 500; }
+  .sb-upgrade {
+    display: block;
+    text-align: center;
+    padding: 8px 12px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: background 0.15s;
+  }
+  .sb-upgrade:hover { background: var(--blue); }
+  .sb-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px;
+    margin-top: 12px;
+  }
+  .sb-user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .sb-user-info { flex: 1; min-width: 0; }
+  .sb-user-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sb-user-org {
+    font-size: 11px;
+    color: var(--ink-3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* MAIN */
+  .main { display: flex; flex-direction: column; min-width: 0; }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .topbar-title {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .topbar-env {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    background: var(--green-soft);
+    color: var(--green);
+    border-radius: 100px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+  .topbar-env::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+  }
+  .topbar-right { display: flex; align-items: center; gap: 8px; }
+  .topbar-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    font-size: 13px;
+    color: var(--ink-2);
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .topbar-btn:hover { border-color: var(--ink-4); color: var(--ink); }
+  .topbar-btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+    box-shadow: 0 1px 2px rgba(37,99,235,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .topbar-btn.primary:hover { background: var(--blue-strong); border-color: var(--blue-strong); }
+  .topbar-search {
+    position: relative;
+    width: 280px;
+  }
+  .topbar-search input {
+    width: 100%;
+    padding: 7px 12px 7px 32px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--bg);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink);
+    outline: none;
+    transition: all 0.15s;
+  }
+  .topbar-search input:focus {
+    border-color: var(--blue);
+    background: var(--panel);
+    box-shadow: 0 0 0 3px var(--blue-soft);
+  }
+  .topbar-search::before {
+    content: '⌕';
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-3);
+    font-size: 14px;
+  }
+  .topbar-search kbd {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 2px 5px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+
+  /* CONTENT */
+  .content { padding: 28px; flex: 1; overflow-y: auto; }
+  .content-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    gap: 16px;
+  }
+  .content-head h1 {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .content-head p {
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+  .content-head-actions { display: flex; gap: 8px; }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    transition: border-color 0.15s;
+  }
+  .stat-card:hover { border-color: var(--ink-4); }
+  .stat-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .stat-card-label {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    font-weight: 450;
+  }
+  .stat-card-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .stat-card-num {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card-trend {
+    font-size: 12px;
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .stat-card-trend.up { color: var(--green); }
+  .stat-card-trend.down { color: var(--red); }
+  .stat-card-trend.neutral { color: var(--ink-3); }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  /* CHART CARD */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel-title {
+    font-size: 14.5px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .panel-actions {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 2px;
+  }
+  .panel-action {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ink-3);
+    background: transparent;
+    border: none;
+    transition: all 0.15s;
+    font-family: 'Geist Mono', monospace;
+  }
+  .panel-action.active {
+    background: var(--panel);
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .panel-body { padding: 20px; }
+
+  /* CHART */
+  .chart-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .chart-stat-num {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .chart-stat-label {
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+  .chart-stat-trend {
+    font-size: 12px;
+    color: var(--green);
+    font-family: 'Geist Mono', monospace;
+    background: var(--green-soft);
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: auto;
+  }
+  .chart-svg {
+    width: 100%;
+    height: 200px;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+  .chart-legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+
+  /* ENDPOINTS LIST */
+  .endpoints-list { display: flex; flex-direction: column; }
+  .endpoint-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: center;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .endpoint-row:last-child { border-bottom: none; }
+  .endpoint-row:hover { background: var(--bg); }
+  .endpoint-method {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 3px 7px;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 48px;
+    letter-spacing: 0.02em;
+  }
+  .endpoint-method.GET { background: var(--blue-soft); color: var(--blue-strong); }
+  .endpoint-method.POST { background: var(--green-soft); color: var(--green); }
+  .endpoint-method.PUT { background: var(--amber-soft); color: var(--amber); }
+  .endpoint-method.DEL { background: var(--red-soft); color: var(--red); }
+  .endpoint-info { min-width: 0; }
+  .endpoint-path {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .endpoint-desc {
+    font-size: 12px;
+    color: var(--ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .endpoint-stat {
+    text-align: right;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.3;
+  }
+  .endpoint-stat-label {
+    font-size: 10.5px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .endpoint-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .endpoint-status.ok { background: var(--green); box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
+  .endpoint-status.warn { background: var(--amber); box-shadow: 0 0 0 2px rgba(245,158,11,0.2); }
+  .endpoint-status.err { background: var(--red); box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+
+  /* ACTIVITY LOG */
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .activity-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: flex-start;
+  }
+  .activity-row:last-child { border-bottom: none; }
+  .activity-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .activity-icon.ok { background: var(--green-soft); color: var(--green); }
+  .activity-icon.warn { background: var(--amber-soft); color: var(--amber); }
+  .activity-icon.info { background: var(--blue-soft); color: var(--blue); }
+  .activity-icon.err { background: var(--red-soft); color: var(--red); }
+  .activity-body { flex: 1; min-width: 0; }
+  .activity-text {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+  .activity-text code {
+    background: var(--bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+  .activity-meta {
+    font-size: 11.5px;
+    color: var(--ink-3);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* QUICK ACTIONS */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .quick-action {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+  }
+  .quick-action:hover {
+    border-color: var(--blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -4px rgba(37,99,235,0.15);
+  }
+  .quick-action-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .quick-action-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--blue-soft);
+    border: 1px solid var(--blue-tint);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+  }
+  .quick-action-arrow {
+    color: var(--ink-4);
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .quick-action:hover .quick-action-arrow {
+    color: var(--blue);
+    transform: translateX(2px);
+  }
+  .quick-action h3 {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .quick-action p {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    line-height: 1.5;
+  }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    background: linear-gradient(135deg, #0b1220 0%, #1d2939 100%);
+    color: #fff;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .alert-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .alert-banner > * { position: relative; z-index: 2; }
+  .alert-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(96,165,250,0.15);
+    border: 1px solid rgba(96,165,250,0.25);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .alert-text { flex: 1; }
+  .alert-text strong {
+    font-weight: 500;
+    font-size: 14.5px;
+    margin-bottom: 2px;
+    display: block;
+  }
+  .alert-text p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+  }
+  .alert-cta {
+    background: var(--blue);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    flex-shrink: 0;
+  }
+  .alert-cta:hover { background: var(--blue-strong); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .quick-actions { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .topbar-search { display: none; }
+    .content { padding: 20px; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <span class="sb-logo-mark"></span>
+        HyperSync
+      </div>
+      <button class="sb-org-switcher" title="Switch organization">⇅</button>
+    </div>
+
+    <div class="sb-section">Workspace</div>
+    <div class="sb-item active">
+      <span class="sb-item-icon">⊞</span>
+      Dashboard
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">{ }</span>
+      Endpoints
+      <span class="sb-item-badge">24</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">≋</span>
+      Queues
+      <span class="sb-item-badge">3</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⊕</span>
+      Webhooks
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⊟</span>
+      Pipelines
+    </div>
+
+    <div class="sb-section">Observability</div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⌖</span>
+      Logs
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⌘</span>
+      Metrics
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⌥</span>
+      Audit trail
+    </div>
+
+    <div class="sb-section">Settings</div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⚿</span>
+      API keys
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">⊙</span>
+      Environments
+      <span class="sb-item-badge">2</span>
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">◴</span>
+      Team
+    </div>
+    <div class="sb-item">
+      <span class="sb-item-icon">$</span>
+      Billing
+    </div>
+
+    <div class="sb-bottom">
+      <div class="sb-usage">
+        <div class="sb-usage-head">
+          <span class="sb-usage-label">Plan · Pro</span>
+          <span class="sb-usage-pct">64%</span>
+        </div>
+        <div class="sb-usage-bar"><div class="sb-usage-fill"></div></div>
+        <div class="sb-usage-text"><strong>642k</strong> / 1M chamadas</div>
+      </div>
+      <a href="#" class="sb-upgrade">Upgrade plan →</a>
+      <div class="sb-user">
+        <div class="sb-user-avatar">HB</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Hércules Bisi</div>
+          <div class="sb-user-org">Disney · Production</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">Dashboard</div>
+        <span class="topbar-env">production</span>
+      </div>
+      <div class="topbar-search">
+        <input type="text" placeholder="Buscar endpoints, logs, queues...">
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn">📚 Docs</button>
+        <button class="topbar-btn">🛟 Support</button>
+        <button class="topbar-btn primary">+ New endpoint</button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ALERT BANNER -->
+      <div class="alert-banner">
+        <div class="alert-icon">!</div>
+        <div class="alert-text">
+          <strong>Você usou 64% das chamadas inclusas no plano Pro.</strong>
+          <p>No ritmo atual, vai ultrapassar 1M antes do fim do ciclo. Considere um upgrade ou adicione overage.</p>
+        </div>
+        <button class="alert-cta">Ver planos →</button>
+      </div>
+
+      <!-- HEAD -->
+      <div class="content-head">
+        <div>
+          <h1>Bom dia, Hércules.</h1>
+          <p>Aqui está o que aconteceu nas últimas 24 horas no ambiente <strong style="color: var(--green);">production</strong>.</p>
+        </div>
+        <div class="content-head-actions">
+          <button class="topbar-btn">↓ Export report</button>
+          <button class="topbar-btn">⟳ Refresh</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-head">
+            <div class="stat-card-label">API calls (24h)</div>
+            <div class="stat-card-icon">{ }</div>
+          </div>
+          <div class="stat-card-num">847,392</div>
+          <div class="stat-card-trend up">↗ +12.4% vs ontem</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-head">
+            <div class="stat-card-label">Avg latency</div>
+            <div class="stat-card-icon">⊙</div>
+          </div>
+          <div class="stat-card-num">42<span style="font-size: 18px; color: var(--ink-3);">ms</span></div>
+          <div class="stat-card-trend down">↘ -8ms vs ontem</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-head">
+            <div class="stat-card-label">Error rate</div>
+            <div class="stat-card-icon">⚠</div>
+          </div>
+          <div class="stat-card-num">0.03<span style="font-size: 18px; color: var(--ink-3);">%</span></div>
+          <div class="stat-card-trend neutral">— estável</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-head">
+            <div class="stat-card-label">Uptime (30d)</div>
+            <div class="stat-card-icon">✓</div>
+          </div>
+          <div class="stat-card-num">99.97<span style="font-size: 18px; color: var(--ink-3);">%</span></div>
+          <div class="stat-card-trend up">SLA OK</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="quick-actions">
+        <button class="quick-action">
+          <div class="quick-action-head">
+            <div class="quick-action-icon">+</div>
+            <span class="quick-action-arrow">→</span>
+          </div>
+          <div>
+            <h3>Criar novo endpoint</h3>
+            <p>Configure um endpoint REST sobre tabelas Protheus em minutos.</p>
+          </div>
+        </button>
+        <button class="quick-action">
+          <div class="quick-action-head">
+            <div class="quick-action-icon">⊕</div>
+            <span class="quick-action-arrow">→</span>
+          </div>
+          <div>
+            <h3>Configurar webhook</h3>
+            <p>Dispare eventos do Protheus pra qualquer sistema externo.</p>
+          </div>
+        </button>
+        <button class="quick-action">
+          <div class="quick-action-head">
+            <div class="quick-action-icon">⌖</div>
+            <span class="quick-action-arrow">→</span>
+          </div>
+          <div>
+            <h3>Ver documentação</h3>
+            <p>Guia rápido, exemplos de código e referência completa da API.</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="main-grid">
+
+        <!-- CHART -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">API calls over time</div>
+            <div class="panel-actions">
+              <button class="panel-action">24h</button>
+              <button class="panel-action active">7d</button>
+              <button class="panel-action">30d</button>
+              <button class="panel-action">90d</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-stat">
+              <span class="chart-stat-num">5.84M</span>
+              <span class="chart-stat-label">total calls · last 7 days</span>
+              <span class="chart-stat-trend">+18.2%</span>
+            </div>
+            <svg class="chart-svg" viewBox="0 0 600 200" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- grid lines -->
+              <line x1="0" y1="40" x2="600" y2="40" stroke="#e4e9f0" stroke-dasharray="4 4"/>
+              <line x1="0" y1="100" x2="600" y2="100" stroke="#e4e9f0" stroke-dasharray="4 4"/>
+              <line x1="0" y1="160" x2="600" y2="160" stroke="#e4e9f0" stroke-dasharray="4 4"/>
+              <!-- area -->
+              <path d="M 0 140 L 80 110 L 160 130 L 240 80 L 320 90 L 400 50 L 480 60 L 600 30 L 600 200 L 0 200 Z" fill="url(#chartGradient)"/>
+              <!-- line -->
+              <path d="M 0 140 L 80 110 L 160 130 L 240 80 L 320 90 L 400 50 L 480 60 L 600 30" stroke="#2563eb" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- secondary line: errors -->
+              <path d="M 0 180 L 80 178 L 160 175 L 240 176 L 320 174 L 400 172 L 480 173 L 600 170" stroke="#ef4444" stroke-width="1.5" fill="none" stroke-dasharray="3 3" stroke-linecap="round"/>
+              <!-- dots -->
+              <circle cx="600" cy="30" r="4" fill="#2563eb"/>
+              <circle cx="600" cy="30" r="8" fill="#2563eb" fill-opacity="0.2"/>
+            </svg>
+            <div class="chart-legend">
+              <div class="chart-legend-item">
+                <span class="chart-legend-dot" style="background: var(--blue);"></span>
+                Successful calls
+              </div>
+              <div class="chart-legend-item">
+                <span class="chart-legend-dot" style="background: var(--red);"></span>
+                Errors (4xx + 5xx)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Recent activity</div>
+            <a href="#" style="font-size: 12.5px; color: var(--blue); font-weight: 500;">View all →</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-row">
+              <div class="activity-icon ok">✓</div>
+              <div class="activity-body">
+                <div class="activity-text">Pipeline <code>nfe-ingestion</code> processou <strong>2.847</strong> notas</div>
+                <div class="activity-meta">há 2 minutos · production</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon info">+</div>
+              <div class="activity-body">
+                <div class="activity-text">Endpoint <code>POST /v2/customers</code> deployed</div>
+                <div class="activity-meta">há 14 minutos · por bruno.silva</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon warn">!</div>
+              <div class="activity-body">
+                <div class="activity-text">Queue <code>sap-bridge</code> com <strong>147</strong> jobs pendentes</div>
+                <div class="activity-meta">há 32 minutos · acima do threshold</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon ok">✓</div>
+              <div class="activity-body">
+                <div class="activity-text">Webhook <code>fiscal-validator</code> respondeu em 89ms</div>
+                <div class="activity-meta">há 1 hora · 200 OK</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon info">⟳</div>
+              <div class="activity-body">
+                <div class="activity-text">API key <code>prod-disney-***-2a4f</code> rotacionada</div>
+                <div class="activity-meta">há 3 horas · automático</div>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-icon err">×</div>
+              <div class="activity-body">
+                <div class="activity-text">3 chamadas falharam em <code>GET /v2/products</code></div>
+                <div class="activity-meta">há 5 horas · timeout no Protheus</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENDPOINTS -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Top endpoints (24h)</div>
+          <div class="panel-actions">
+            <button class="panel-action active">By volume</button>
+            <button class="panel-action">By latency</button>
+            <button class="panel-action">By errors</button>
+          </div>
+        </div>
+        <div class="endpoints-list">
+          <div class="endpoint-row">
+            <span class="endpoint-method POST">POST</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/invoices/ingest</div>
+              <div class="endpoint-desc">Pipeline de ingestão de NF-e de fornecedores</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>284,491</div>
+              <div class="endpoint-stat-label">calls · 38ms avg</div>
+            </div>
+            <span class="endpoint-status ok"></span>
+          </div>
+          <div class="endpoint-row">
+            <span class="endpoint-method GET">GET</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/customers</div>
+              <div class="endpoint-desc">Lista de clientes com filtros dinâmicos (SA1)</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>198,322</div>
+              <div class="endpoint-stat-label">calls · 24ms avg</div>
+            </div>
+            <span class="endpoint-status ok"></span>
+          </div>
+          <div class="endpoint-row">
+            <span class="endpoint-method POST">POST</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/orders</div>
+              <div class="endpoint-desc">Criação de pedido de venda integrado ao SAP</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>142,108</div>
+              <div class="endpoint-stat-label">calls · 71ms avg</div>
+            </div>
+            <span class="endpoint-status warn"></span>
+          </div>
+          <div class="endpoint-row">
+            <span class="endpoint-method GET">GET</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/products/search</div>
+              <div class="endpoint-desc">Busca de produtos com filtros e paginação</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>118,940</div>
+              <div class="endpoint-stat-label">calls · 31ms avg</div>
+            </div>
+            <span class="endpoint-status ok"></span>
+          </div>
+          <div class="endpoint-row">
+            <span class="endpoint-method PUT">PUT</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/inventory/sync</div>
+              <div class="endpoke-desc">Sincronização de estoque com sistema parceiro</div>
+              <div class="endpoint-desc">Sincronização de estoque com sistema parceiro</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>87,516</div>
+              <div class="endpoint-stat-label">calls · 52ms avg</div>
+            </div>
+            <span class="endpoint-status ok"></span>
+          </div>
+          <div class="endpoint-row">
+            <span class="endpoint-method DEL">DEL</span>
+            <div class="endpoint-info">
+              <div class="endpoint-path">/v2/cache/invalidate</div>
+              <div class="endpoint-desc">Invalidação de cache por chave ou padrão</div>
+            </div>
+            <div class="endpoint-stat">
+              <div>16,015</div>
+              <div class="endpoint-stat-label">calls · 12ms avg</div>
+            </div>
+            <span class="endpoint-status ok"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
